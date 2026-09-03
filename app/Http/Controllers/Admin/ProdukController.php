@@ -13,10 +13,20 @@ class ProdukController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produk = Produk::with('umkm')->latest()->paginate(10);
-        return view('admin.produk.index', compact('produk'));
+        $query = Produk::with('umkm');
+
+        if ($request->filled('search')) {
+            $query->where('nama_produk', 'like', '%' . $request->search . '%')
+                ->orWhereHas('umkm', function($q) use ($request) {
+                    $q->where('nama_umkm', 'like', '%' . $request->search . '%');
+                });
+        }
+
+        $produks = $query->latest()->paginate(10)->withQueryString();
+
+        return view('admin.produk.index', compact('produks'));
     }
 
     /**

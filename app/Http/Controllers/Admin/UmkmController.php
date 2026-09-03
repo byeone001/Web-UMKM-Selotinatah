@@ -8,17 +8,25 @@ use App\Models\Umkm;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Storage;
 
-
-
 class UmkmController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        $umkm = Umkm::latest()->paginate(10);
-        return view('admin.umkm.index', compact('umkm'));
+        $query = Umkm::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_umkm', 'like', '%' . $request->search . '%')
+                ->orWhere('pemilik', 'like', '%' . $request->search . '%')
+                ->orWhere('kategori', 'like', '%' . $request->search . '%');
+        }
+
+        $umkms = $query->latest()->paginate(10)->withQueryString();
+
+        return view('admin.umkm.index', compact('umkms'));
     }
 
     /**

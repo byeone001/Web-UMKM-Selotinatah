@@ -14,6 +14,14 @@
                 </div>
             @endif
 
+            <form action="{{ route('admin.umkm.index') }}" method="GET" class="mb-4 flex gap-2">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari UMKM, pemilik, atau kategori..." class="border rounded-lg px-4 py-2 text-sm w-full md:w-80 border-gray-300 focus:outline-blue-500">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 text-sm rounded-lg">Cari</button>
+                @if(request()->filled('search'))
+                    <a href="{{ route('admin.umkm.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-4 py-2 text-sm rounded-lg flex items-center">Reset</a>
+                @endif
+            </form>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -28,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($umkm as $item)
+                        @forelse($umkms as $item)
                         <tr class="border-b hover:bg-gray-50">
                             <td class="p-3">
                                 @if($item->foto)
@@ -61,7 +69,7 @@
                     </tbody>
                 </table>
                 <div class="mt-4">
-                    {{ $umkm ->links() }}
+                    {{ $umkms ->links() }}
                 </div>
             </div>
         </div>
