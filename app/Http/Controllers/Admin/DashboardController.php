@@ -20,65 +20,69 @@ class DashboardController extends Controller
         $latestUmkms = Umkm::latest()->take(5)->get();
         $latestProduks = Produk::with('umkm')->latest()->take(5)->get();
 
-        $beritas = Cache::remember('berita_admin_v3', 1800, function () {
-            $urls = [
-                'https://selotinatah.magetan.go.id/first/rss',
-                'https://selotinatah.magetan.go.id/rss',
-                'https://selotinatah.magetan.go.id/feed',
-            ];
+        $berita = Cache::remember('berita_admin_live_v2', 3600, function () {
+            try {
+                $response = Http::withoutVerifying()
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    ])
+                    ->timeout(6)
+                    ->get('https://selotinatah.magetan.go.id/berita/fetch-data?page=1');
 
-            foreach ($urls as $url) {
-                try {
-                    $response = Http::withoutVerifying()
-                        ->withHeaders([
-                            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                        ])
-                        ->timeout(5)
-                        ->get($url);
-
-                    if ($response->successful()) {
-                        $xml = @simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NOCDATA);
+                if ($response->successful()) {
+                    $json = $response->json();
+                    if (isset($json['posts']) && is_array($json['posts']) && count($json['posts']) > 0) {
                         $items = [];
-
-                        if ($xml && isset($xml->channel->item)) {
-                            foreach ($xml->channel->item as $item) {
-                                $items[] = [
-                                    'title'       => (string)$item->title,
-                                    'link'        => (string)$item->link,
-                                    'date'        => date('d M Y', strtotime((string)$item->pubDate)),
-                                    'description' => Str::limit(strip_tags((string)$item->description), 110),
-                                ];
-
-                                if (count($items) >= 3) break;
+                        foreach (array_slice($json['posts'], 0, 4) as $post) {
+                            $id = $post['id_berita'] ?? '';
+                            $title = $post['judul'] ?? 'Berita Desa Selotinatah';
+                            $slug = Str::slug($title);
+                            $img = $post['img_url'] ?? '';
+                            if ($img && str_starts_with($img, '/')) {
+                                $img = 'https://selotinatah.magetan.go.id' . $img;
                             }
-                            if (!empty($items)) {
-                                return $items;
+                            $link = "https://selotinatah.magetan.go.id/berita/view/{$id}-{$slug}";
+                            
+                            $rawKonten = strip_tags(html_entity_decode($post['konten'] ?? ''));
+                            $date = 'Warta Desa';
+                            if (preg_match('/(Senin|Selasa|Rabu|Kamis|Jum[\'a-z]+|Sabtu|Minggu),\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}/u', $rawKonten, $matches)) {
+                                $date = $matches[0];
                             }
+
+                            $cleanDesc = preg_replace('/^Selotinatah,\s*Ngariboyo,\s*Magetan\s*—\s*[^—]+—\s*/ui', '', $rawKonten);
+                            $desc = Str::limit(trim($cleanDesc), 100);
+
+                            $items[] = [
+                                'title'       => $title,
+                                'link'        => $link,
+                                'image'       => $img,
+                                'date'        => $date,
+                                'description' => $desc,
+                            ];
+                        }
+                        if (!empty($items)) {
+                            return $items;
                         }
                     }
-                } catch (\Exception $e) {
-                    continue;
                 }
+            } catch (\Throwable $e) {
+                // Fallback
             }
 
             return [
                 [
-                    'title'       => 'Portal Informasi & Berita Desa Selotinatah',
-                    'link'        => 'https://selotinatah.magetan.go.id/',
-                    'date'        => date('d M Y'),
-                    'description' => 'Akses informasi terbaru mengenai kegiatan masyarakat, pembangunan, dan layanan administrasi Desa Selotinatah.',
+                    'title'       => 'Peringatan Maulid Nabi Muhammad SAW di Jrakah, Dusun Banaran',
+                    'link'        => 'https://selotinatah.magetan.go.id/berita',
+                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14451_6a95811165caa7.55701157.jpeg',
+                    'date'        => 'Sabtu, 29 Agustus 2026',
+                    'description' => 'Masyarakat Jrakah, Dusun Banaran, Desa Selotinatah melaksanakan kegiatan peringatan Maulid Nabi dengan khidmat.',
                 ],
                 [
-                    'title'       => 'Pemberdayaan Ekonomi Masyarakat Melalui UMKM Desa',
-                    'link'        => 'https://selotinatah.magetan.go.id/',
-                    'date'        => date('d M Y', strtotime('-2 days')),
-                    'description' => 'Pemerintah Desa Selotinatah terus mendorong potensi produk lokal UMKM agar berdaya saing secara digital.',
-                ],
-                [
-                    'title'       => 'Kegiatan Gotong Royong dan Pembangunan Infrastruktur',
-                    'link'        => 'https://selotinatah.magetan.go.id/',
-                    'date'        => date('d M Y', strtotime('-5 days')),
-                    'description' => 'Warga desa aktif berpartisipasi dalam menjaga kebersihan lingkungan dan kelancaran program pembangunan desa.',
+                    'title'       => 'Kerja Bakti Masyarakat Desa Selotinatah',
+                    'link'        => 'https://selotinatah.magetan.go.id/berita',
+                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14450_6a957e63af5187.96721326.jpeg',
+                    'date'        => 'Minggu, 9 Agustus 2026',
+                    'description' => 'Pemerintah Desa Selotinatah bersama warga melaksanakan kerja bakti lingkungan desa.',
                 ],
             ];
         });
@@ -89,7 +93,7 @@ class DashboardController extends Controller
             'totalKategori', 
             'latestUmkms', 
             'latestProduks',
-            'beritas'
+            'berita'
         ));
     }
 }

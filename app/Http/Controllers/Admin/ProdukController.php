@@ -20,7 +20,8 @@ class ProdukController extends Controller
         if ($request->filled('search')) {
             $query->where('nama_produk', 'like', '%' . $request->search . '%')
                 ->orWhereHas('umkm', function($q) use ($request) {
-                    $q->where('nama_umkm', 'like', '%' . $request->search . '%');
+                    $q->where('nama_umkm', 'like', '%' . $request->search . '%')
+                      ->orWhere('pemilik', 'like', '%' . $request->search . '%');
                 });
         }
 
@@ -34,8 +35,9 @@ class ProdukController extends Controller
      */
     public function create()
     {
-        $umkm = Umkm::all();
-        return view('admin.produk.create', compact('umkm'))->withTitle('Buat Produk');
+        $umkms = Umkm::orderBy('nama_umkm', 'asc')->get();
+        $umkm = $umkms; // Alias for backward compatibility
+        return view('admin.produk.create', compact('umkms', 'umkm'))->withTitle('Tambah Produk');
     }
 
     /**
@@ -43,21 +45,28 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_umkm'   => 'required',
-            'nama_umkm' => 'required',
-            'pemilik' => 'required',
-            'kategori' => 'required',
-            'foto' => 'required|image|mimes:png,jpg,jpeg|max:2048', 
+        $validated = $request->validate([
+            'id_umkm'     => 'required|exists:umkms,id_umkm',
+            'nama_produk' => 'required|string|max:100',
+            'harga'       => 'required|numeric|min:0',
+            'deskripsi'   => 'nullable|string',
+            'foto'        => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+        ], [
+            'id_umkm.required'     => 'Silakan pilih UMKM pemilik produk.',
+            'id_umkm.exists'       => 'UMKM yang dipilih tidak valid.',
+            'nama_produk.required' => 'Nama produk wajib diisi.',
+            'harga.required'       => 'Harga produk wajib diisi.',
+            'harga.numeric'        => 'Harga produk harus berupa angka.',
+            'foto.image'           => 'File harus berupa gambar.',
+            'foto.mimes'           => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
+            'foto.max'             => 'Ukuran foto maksimal 5 MB.',
         ]);
 
-        $data = $request->all();
-
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('produk', 'public');
+            $validated['foto'] = $request->file('foto')->store('produk', 'public');
         }
 
-        Produk::create($data);
+        Produk::create($validated);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
@@ -67,7 +76,8 @@ class ProdukController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $produk = Produk::with('umkm')->findOrFail($id);
+        return redirect()->route('admin.produk.edit', $produk->id_produk);
     }
 
     /**
@@ -76,8 +86,9 @@ class ProdukController extends Controller
     public function edit(string $id)
     {
         $produk = Produk::findOrFail($id);
-        $umkm = Umkm::all();
-        return view('admin.produk.edit', compact('produk', 'umkm'))->withTitle('Edit Produk');
+        $umkms = Umkm::orderBy('nama_umkm', 'asc')->get();
+        $umkm = $umkms; // Alias for backward compatibility
+        return view('admin.produk.edit', compact('produk', 'umkms', 'umkm'))->withTitle('Edit Produk');
     }
 
     /**
@@ -87,24 +98,31 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
 
-        $request->validate([
-            'id_umkm'   => 'required',
-            'nama_umkm' => 'required',
-            'pemilik' => 'required',
-            'kategori' => 'required',
-            'foto' => 'nullable|image|mimes:png,jpg,jpeg|max:2048', 
+        $validated = $request->validate([
+            'id_umkm'     => 'required|exists:umkms,id_umkm',
+            'nama_produk' => 'required|string|max:100',
+            'harga'       => 'required|numeric|min:0',
+            'deskripsi'   => 'nullable|string',
+            'foto'        => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+        ], [
+            'id_umkm.required'     => 'Silakan pilih UMKM pemilik produk.',
+            'id_umkm.exists'       => 'UMKM yang dipilih tidak valid.',
+            'nama_produk.required' => 'Nama produk wajib diisi.',
+            'harga.required'       => 'Harga produk wajib diisi.',
+            'harga.numeric'        => 'Harga produk harus berupa angka.',
+            'foto.image'           => 'File harus berupa gambar.',
+            'foto.mimes'           => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
+            'foto.max'             => 'Ukuran foto maksimal 5 MB.',
         ]);
 
-        $data = $request->all();
-
         if ($request->hasFile('foto')) {
-            if ($produk->foto){
+            if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
                 Storage::disk('public')->delete($produk->foto);
             }
-            $data['foto'] = $request->file('foto')->store('produk', 'public');
+            $validated['foto'] = $request->file('foto')->store('produk', 'public');
         }
 
-        $produk->update($data);
+        $produk->update($validated);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diupdate.');
     }
@@ -116,7 +134,7 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
 
-        if ($produk->foto){
+        if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
             Storage::disk('public')->delete($produk->foto);
         }
 

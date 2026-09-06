@@ -13,7 +13,6 @@ class UmkmController extends Controller
     /**
      * Display a listing of the resource.
      */
-
     public function index(Request $request)
     {
         $query = Umkm::query();
@@ -39,7 +38,7 @@ class UmkmController extends Controller
 
     public function edit($id)
     {
-        $umkm = Umkm::find($id);
+        $umkm = Umkm::findOrFail($id);
         return view('admin.umkm.edit', compact('umkm'));
     }
 
@@ -48,23 +47,32 @@ class UmkmController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
-            'nama_umkm' => 'required',
-            'pemilik' => 'required',
-            'kategori' => 'required',
-            'kontak' => 'required',
-            'link_lokasi' => 'required',
-            'foto' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+        $validated = $request->validate([
+            'nama_umkm'   => 'required|string|max:100',
+            'pemilik'     => 'required|string|max:100',
+            'kategori'    => 'required|string|max:50',
+            'kontak'      => 'required|string|max:100',
+            'alamat'      => 'nullable|string',
+            'deskripsi'   => 'nullable|string',
+            'link_lokasi' => 'nullable|string|max:255',
+            'foto'        => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+        ], [
+            'nama_umkm.required' => 'Nama UMKM wajib diisi.',
+            'pemilik.required'   => 'Nama pemilik usaha wajib diisi.',
+            'kategori.required'  => 'Kategori usaha wajib dipilih/diisi.',
+            'kontak.required'    => 'Nomor kontak WhatsApp wajib diisi.',
+            'foto.image'         => 'File harus berupa gambar.',
+            'foto.mimes'         => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
+            'foto.max'           => 'Ukuran foto maksimal 5 MB.',
         ]);
 
-        $data = $request->all();
-
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('umkm', 'public');
+            $validated['foto'] = $request->file('foto')->store('umkm', 'public');
         }
 
-        Umkm::create($data);
-        return redirect()->route('admin.umkm.index')->with('success', 'Data Umkm berhasil ditambahkan');
+        Umkm::create($validated);
+
+        return redirect()->route('admin.umkm.index')->with('success', 'Data UMKM berhasil ditambahkan.');
     }
 
     /**
@@ -72,38 +80,46 @@ class UmkmController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $umkm = Umkm::findOrFail($id);
+        return redirect()->route('admin.umkm.edit', $umkm->id_umkm);
     }
-
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        $umkm = Umkm::find($id);
+        $umkm = Umkm::findOrFail($id);
 
-        $request->validate([
-            'nama_umkm' => 'required',
-            'pemilik' => 'required',
-            'kategori' => 'required',
-            'kontak' => 'required',
-            'link_lokasi' => 'required',
-            'foto' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+        $validated = $request->validate([
+            'nama_umkm'   => 'required|string|max:100',
+            'pemilik'     => 'required|string|max:100',
+            'kategori'    => 'required|string|max:50',
+            'kontak'      => 'required|string|max:100',
+            'alamat'      => 'nullable|string',
+            'deskripsi'   => 'nullable|string',
+            'link_lokasi' => 'nullable|string|max:255',
+            'foto'        => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+        ], [
+            'nama_umkm.required' => 'Nama UMKM wajib diisi.',
+            'pemilik.required'   => 'Nama pemilik usaha wajib diisi.',
+            'kategori.required'  => 'Kategori usaha wajib dipilih/diisi.',
+            'kontak.required'    => 'Nomor kontak WhatsApp wajib diisi.',
+            'foto.image'         => 'File harus berupa gambar.',
+            'foto.mimes'         => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
+            'foto.max'           => 'Ukuran foto maksimal 5 MB.',
         ]);
 
-        $data = $request->all();
-
         if ($request->hasFile('foto')) {
-            if ($umkm->foto){
+            if ($umkm->foto && Storage::disk('public')->exists($umkm->foto)) {
                 Storage::disk('public')->delete($umkm->foto);
             }
-            $data['foto'] = $request->file('foto')->store('umkm', 'public');
+            $validated['foto'] = $request->file('foto')->store('umkm', 'public');
         }
 
-        $umkm->update($data);
+        $umkm->update($validated);
 
-        return redirect()->route('admin.umkm.index')->with('success', 'Data Umkm berhasil diupdate');
+        return redirect()->route('admin.umkm.index')->with('success', 'Data UMKM berhasil diperbarui.');
     }
 
     /**
@@ -111,14 +127,14 @@ class UmkmController extends Controller
      */
     public function destroy(string $id)
     {
-        $umkm = Umkm::find($id);
+        $umkm = Umkm::findOrFail($id);
 
-        if ($umkm){
-            storage::disk('public')->delete($umkm->foto);
+        if ($umkm->foto && Storage::disk('public')->exists($umkm->foto)) {
+            Storage::disk('public')->delete($umkm->foto);
         }
 
         $umkm->delete();
 
-        return redirect()->route('admin.umkm.index')->with('success', 'Data Umkm berhasil dihapus');
+        return redirect()->route('admin.umkm.index')->with('success', 'Data UMKM berhasil dihapus.');
     }
 }

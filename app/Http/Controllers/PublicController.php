@@ -12,84 +12,135 @@ use Illuminate\Support\Str;
 class PublicController extends Controller
 {
     // Halaman Beranda Utama
-    public function index()
+    public function index(Request $request)
     {
-       $umkm = Umkm::latest()->take(6)->get();
-        $produk = Produk::with('umkm')->latest()->take(8)->get();
+        $search = $request->input('q');
+        $kategoriSelected = $request->input('kategori');
 
-        // Menggunakan cache key baru 'berita_desa_v3' untuk memaksa reload data
-        $berita = Cache::remember('berita_desa_v3', 1800, function () {
-            $urls = [
-                'https://selotinatah.magetan.go.id/first/rss',
-                'https://selotinatah.magetan.go.id/rss',
-                'https://selotinatah.magetan.go.id/feed',
-            ];
+        // Data Statistik Desa
+        $totalUmkm = Umkm::count();
+        $totalProduk = Produk::count();
+        $totalKategori = Umkm::distinct('kategori')->whereNotNull('kategori')->count('kategori');
 
-            foreach ($urls as $url) {
-                try {
-                    $response = Http::withoutVerifying()
-                        ->withHeaders([
-                            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                        ])
-                        ->timeout(5)
-                        ->get($url);
+        // List Kategori untuk Filter Badges
+        $kategoriList = Umkm::whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->distinct()
+            ->pluck('kategori');
 
-                    if ($response->successful()) {
-                        $xml = @simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NOCDATA);
+        // Query Produk Terbaru (Filter jika ada pencarian)
+        $produkQuery = Produk::with('umkm');
+        if ($search) {
+            $produkQuery->where(function($q) use ($search) {
+                $q->where('nama_produk', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        }
+        if ($kategoriSelected) {
+            $produkQuery->whereHas('umkm', function($q) use ($kategoriSelected) {
+                $q->where('kategori', $kategoriSelected);
+            });
+        }
+        $produk = $produkQuery->latest()->take(8)->get();
+
+       $umkm = Umkm::latest()->take(6)->get();      
+
+        // Ambil berita langsung dari website resmi Desa Selotinatah
+        $berita = Cache::remember('berita_desa_live_v2', 3600, function () {
+            try {
+                $response = Http::withoutVerifying()
+                    ->withHeaders([
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    ])
+                    ->timeout(6)
+                    ->get('https://selotinatah.magetan.go.id/berita/fetch-data?page=1');
+
+                if ($response->successful()) {
+                    $json = $response->json();
+                    if (isset($json['posts']) && is_array($json['posts']) && count($json['posts']) > 0) {
                         $items = [];
-
-                        if ($xml && isset($xml->channel->item)) {
-                            foreach ($xml->channel->item as $item) {
-                                $items[] = [
-                                    'title'       => (string)$item->title,
-                                    'link'        => (string)$item->link,
-                                    'date'        => date('d M Y', strtotime((string)$item->pubDate)),
-                                    'description' => Str::limit(strip_tags((string)$item->description), 110),
-                                ];
-
-                                if (count($items) >= 3) break;
+                        foreach (array_slice($json['posts'], 0, 6) as $post) {
+                            $id = $post['id_berita'] ?? '';
+                            $title = $post['judul'] ?? 'Berita Desa Selotinatah';
+                            $slug = Str::slug($title);
+                            $img = $post['img_url'] ?? '';
+                            if ($img && str_starts_with($img, '/')) {
+                                $img = 'https://selotinatah.magetan.go.id' . $img;
                             }
-                            if (!empty($items)) {
-                                return $items;
+                            $link = "https://selotinatah.magetan.go.id/berita/view/{$id}-{$slug}";
+                            
+                            $rawKonten = strip_tags(html_entity_decode($post['konten'] ?? ''));
+                            
+                            // Ekstrak tanggal jika terdapat dalam konten
+                            $date = 'Warta Desa';
+                            if (preg_match('/(Senin|Selasa|Rabu|Kamis|Jum[\'a-z]+|Sabtu|Minggu),\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}/u', $rawKonten, $matches)) {
+                                $date = $matches[0];
                             }
+
+                            // Bersihkan deskripsi dari prefiks tempat/tanggal
+                            $cleanDesc = preg_replace('/^Selotinatah,\s*Ngariboyo,\s*Magetan\s*—\s*[^—]+—\s*/ui', '', $rawKonten);
+                            $desc = Str::limit(trim($cleanDesc), 125);
+
+                            $items[] = [
+                                'title'       => $title,
+                                'link'        => $link,
+                                'image'       => $img,
+                                'date'        => $date,
+                                'description' => $desc,
+                            ];
+                        }
+                        if (!empty($items)) {
+                            return $items;
                         }
                     }
-                } catch (\Exception $e) {
-                    continue;
                 }
+            } catch (\Throwable $e) {
+                // Fallback jika website desa tidak merespon
             }
 
-            // Fallback default jika RSS web desa sedang down/offline
             return [
                 [
-                    'title'       => 'Portal Informasi & Berita Desa Selotinatah',
-                    'link'        => 'https://selotinatah.magetan.go.id/',
-                    'date'        => date('d M Y'),
-                    'description' => 'Akses informasi terbaru mengenai kegiatan masyarakat, pembangunan, dan layanan administrasi Desa Selotinatah.',
+                    'title'       => 'Peringatan Maulid Nabi Muhammad SAW di Jrakah, Dusun Banaran',
+                    'link'        => 'https://selotinatah.magetan.go.id/berita',
+                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14451_6a95811165caa7.55701157.jpeg',
+                    'date'        => 'Sabtu, 29 Agustus 2026',
+                    'description' => 'Masyarakat Jrakah, Dusun Banaran, Desa Selotinatah melaksanakan kegiatan peringatan Maulid Nabi dengan khidmat dan penuh kebersamaan.',
                 ],
                 [
-                    'title'       => 'Pemberdayaan Ekonomi Masyarakat Melalui UMKM Desa',
-                    'link'        => 'https://selotinatah.magetan.go.id/',
-                    'date'        => date('d M Y', strtotime('-2 days')),
-                    'description' => 'Pemerintah Desa Selotinatah terus mendorong potensi produk lokal UMKM agar berdaya saing secara digital.',
+                    'title'       => 'Kerja Bakti Masyarakat Desa Selotinatah',
+                    'link'        => 'https://selotinatah.magetan.go.id/berita',
+                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14450_6a957e63af5187.96721326.jpeg',
+                    'date'        => 'Minggu, 9 Agustus 2026',
+                    'description' => 'Pemerintah Desa Selotinatah bersama warga melaksanakan kerja bakti demi memelihara kebersihan lingkungan dan kenyamanan desa.',
                 ],
                 [
-                    'title'       => 'Kegiatan Gotong Royong dan Pembangunan Infrastruktur',
-                    'link'        => 'https://selotinatah.magetan.go.id/',
-                    'date'        => date('d M Y', strtotime('-5 days')),
-                    'description' => 'Warga desa aktif berpartisipasi dalam menjaga kebersihan lingkungan dan kelancaran program pembangunan desa.',
+                    'title'       => 'Penyaluran Bantuan PLN Kepada Masyarakat Desa Selotinatah',
+                    'link'        => 'https://selotinatah.magetan.go.id/berita',
+                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14449_6a957b82959409.69264733.jpeg',
+                    'date'        => 'Senin, 13 Juli 2026',
+                    'description' => 'Penyaluran bantuan program tanggung jawab sosial dari PLN kepada warga masyarakat Desa Selotinatah untuk meningkatkan kesejahteraan.',
                 ],
             ];
         });
 
-        return view('welcome', compact('umkm', 'produk', 'berita'));
+        // Kirimkan $kategoriList ke view
+        return view('welcome', compact(
+            'totalUmkm',
+            'totalProduk',
+            'totalKategori',
+            'kategoriList',
+            'produk',
+            'umkm',
+            'berita'
+        ));
+
     }
 
     // Halaman Katalog Produk + Filter
     public function katalog(Request $request)
     {
         $query = Produk::with('umkm');
-
+ 
         // Filter berdasarkan pencarian nama produk
         if ($request->filled('search')) {
             $query->where('nama_produk', 'like', '%' . $request->search . '%');
