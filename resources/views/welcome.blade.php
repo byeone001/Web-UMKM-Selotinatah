@@ -80,6 +80,41 @@
         </div>
     </div>
 
+     <!-- Seksi Berita Desa -->
+<section class="py-12 bg-slate-50 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Kabar Terkini</span>
+                <h2 class="text-2xl font-extrabold text-gray-900 mt-1">Berita Desa Selotinatah</h2>
+            </div>
+            <a href="https://selotinatah.magetan.go.id/" target="_blank" class="text-sm font-semibold text-blue-600 hover:text-blue-800">
+                Lihat Web Desa &rarr;
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($berita as $b)
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <p class="text-xs text-gray-400 mb-2">{{ $b['date'] }}</p>
+                        <h3 class="font-bold text-gray-800 text-base mb-2 line-clamp-2 hover:text-blue-600">
+                            <a href="{{ $b['link'] }}" target="_blank">{{ $b['title'] }}</a>
+                        </h3>
+                        <p class="text-gray-600 text-xs leading-relaxed mb-4">
+                            {{ $b['description'] }}
+                        </p>
+                    </div>
+                    <a href="{{ $b['link'] }}" target="_blank" class="text-xs font-bold text-blue-600 hover:underline inline-flex items-center gap-1">
+                        Baca Selengkapnya
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
     <footer class="bg-white border-t py-6 text-center text-sm text-gray-500">
         &copy; {{ date('Y') }} Portal UMKM Desa Selotinatah. All rights reserved.
     </footer>

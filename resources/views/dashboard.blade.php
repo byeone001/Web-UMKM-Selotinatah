@@ -76,4 +76,40 @@
             </div>
         </div>
     </div>
+
+<!-- Seksi Berita Desa -->
+<div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mt-8">
+    <div class="flex justify-between items-center mb-6 border-b pb-3">
+        <div>
+            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Kabar Terkini</span>
+            <h3 class="font-bold text-lg text-gray-800">Berita Desa Selotinatah</h3>
+        </div>
+        <a href="https://selotinatah.magetan.go.id/" target="_blank" class="text-xs font-semibold text-blue-600 hover:text-blue-800">
+            Lihat Web Desa &rarr;
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @forelse($beritas as $b)
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col justify-between">
+                <div>
+                    <p class="text-xs text-gray-400 mb-1">{{ $b['date'] }}</p>
+                    <h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2">
+                        <a href="{{ $b['link'] }}" target="_blank" class="hover:text-blue-600">{{ $b['title'] }}</a>
+                    </h4>
+                    <p class="text-gray-600 text-xs leading-relaxed mb-3">
+                        {{ $b['description'] }}
+                    </p>
+                </div>
+                <a href="{{ $b['link'] }}" target="_blank" class="text-xs font-bold text-blue-600 hover:underline">
+                    Baca Selengkapnya &rarr;
+                </a>
+            </div>
+        @empty
+            <div class="col-span-3 text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                <p class="text-sm font-medium text-gray-500">Belum ada berita yang ditarik dari website desa.</p>
+            </div>
+        @endforelse
+    </div>
+</div>
 </x-app-layout>
