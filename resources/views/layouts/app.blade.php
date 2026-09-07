@@ -44,7 +44,7 @@
          ============================================= -->
     <aside
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-        class="sidebar-nav weave-bg"
+        class="sidebar-nav"
         x-cloak
     >
         <!-- Logo Area -->
@@ -55,18 +55,18 @@
                 </svg>
             </div>
             <div class="min-w-0">
-                <p class="text-sm font-black text-white truncate">UMKM Selotinatah</p>
-                <p class="text-[10px] text-emerald-300/70 truncate">Desa Selotinatah · Magetan</p>
+                <p class="text-sm font-bold text-slate-900 truncate">UMKM Selotinatah</p>
+                <p class="text-[11px] text-slate-500 truncate">Desa Selotinatah · Magetan</p>
             </div>
             <!-- Close button mobile -->
-            <button @click="sidebarOpen = false" class="ml-auto lg:hidden text-emerald-300 hover:text-white transition-colors flex-shrink-0">
+            <button @click="sidebarOpen = false" class="ml-auto lg:hidden text-slate-400 hover:text-slate-700 transition-colors flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
-        <!-- Navigation Menu -->
+        <!-- Navigation Menu --> 
         <nav class="flex-1 overflow-y-auto py-4 space-y-0.5">
 
             <!-- MAIN MENU -->
@@ -80,7 +80,7 @@
                 </svg>
                 <span>Dashboard Rekap</span>
                 @if(request()->routeIs('dashboard'))
-                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 @endif
             </a>
 
@@ -95,7 +95,7 @@
                 </svg>
                 <span>Kelola UMKM</span>
                 @if(request()->routeIs('admin.umkm.*'))
-                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 @endif
             </a>
 
@@ -104,10 +104,10 @@
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                </svg>
-                <span>Produk Anyaman</span>
+                </svg> 
+                <span>Kelola Produk</span>
                 @if(request()->routeIs('admin.produk.*'))
-                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 @endif
             </a>
 
@@ -153,25 +153,25 @@
                 </svg>
                 <span>Pengaturan Profil</span>
                 @if(request()->routeIs('profile.*'))
-                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 @endif
             </a>
         </nav>
 
         <!-- User Info Footer -->
-        <div class="px-4 py-4 border-t border-emerald-700/40">
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-colors">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+        <div class="px-4 py-4 border-t border-slate-100 bg-slate-50/60">
+            <div class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-sm">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                     {{ substr(Auth::user()->name, 0, 1) }}
                 </div>
                 <div class="min-w-0 flex-1">
-                    <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
-                    <p class="text-[10px] text-emerald-300/70 truncate">{{ Auth::user()->email }}</p>
+                    <p class="text-sm font-semibold text-slate-800 truncate">{{ Auth::user()->name }}</p>
+                    <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="flex-shrink-0">
                     @csrf
                     <button type="submit" title="Keluar"
-                            class="w-8 h-8 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 hover:text-white flex items-center justify-center transition-all">
+                            class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition-all border border-red-200/60">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
