@@ -11,15 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('produks', function (Blueprint $table) {
-        $table->id('id_produk');
-        $table->foreignId('id_umkm')->constrained('umkms', 'id_umkm')->onDelete('cascade');
-        $table->string('nama_produk', 100);
-        $table->text('deskripsi')->nullable();
-        $table->decimal('harga', 12, 2)->default(0);
-        $table->string('foto')->nullable();
-        $table->timestamps();
-    });
+        if (Schema::hasTable('produks') && ! Schema::hasTable('produk')) {
+            Schema::rename('produks', 'produk');
+
+            return;
+        }
+
+        Schema::create('produk', function (Blueprint $table) {
+            $table->id('id_produk');
+            $table->foreignId('id_umkm')->constrained('umkm', 'id_umkm')->onDelete('cascade');
+            $table->string('nama_produk', 100);
+            $table->text('deskripsi')->nullable();
+            $table->decimal('harga', 12, 2)->default(0);
+            $table->string('foto')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -27,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produks');
+        Schema::dropIfExists('produk');
     }
 };

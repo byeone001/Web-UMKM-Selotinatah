@@ -11,18 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('umkm', function (Blueprint $table) {
-        $table->id('id_umkm');
-        $table->string('nama_umkm', 100);
-        $table->string('pemilik', 100);
-        $table->string('kategori', 50);
-        $table->text('deskripsi')->nullable();
-        $table->string('foto')->nullable();
-        $table->text('alamat')->nullable();
-        $table->string('kontak', 100)->nullable();
-        $table->string('lokasi')->nullable();
-        $table->timestamps();
-    });
+        if (Schema::hasTable('umkms') && ! Schema::hasTable('umkm')) {
+            Schema::rename('umkms', 'umkm');
+
+            return;
+        }
+
+        Schema::create('umkm', function (Blueprint $table) {
+            $table->id('id_umkm');
+            $table->string('nama_umkm', 100);
+            $table->string('pemilik', 100);
+            $table->string('kategori', 50);
+            $table->text('deskripsi')->nullable();
+            $table->string('foto')->nullable();
+            $table->text('alamat')->nullable();
+            $table->string('kontak', 100)->nullable();
+            $table->string('link_lokasi')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -30,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('umkms');
+        Schema::dropIfExists('umkm');
     }
 };

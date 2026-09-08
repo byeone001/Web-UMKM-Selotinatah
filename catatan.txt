@@ -1,0 +1,48 @@
+Selaraskan migration dengan tabel aktual umkm/umkms dan produk/produks.
+Selaraskan link_lokasi dengan schema.
+Tambahkan role/policy admin.
+Rapikan relasi produk() dan produks() menjadi satu relasi.
+Tambahkan validasi URL dan nomor WhatsApp.
+Tingkatkan layout mobile halaman detail.
+Tambahkan informasi stok, operasional, pengiriman, dan kepercayaan.
+Tambahkan feature test untuk halaman detail, CRUD, authorization, dan migration.
+
+
+Benahi konsistensi tabel umkm/umkms dan foreign key.
+Tambahkan atau hapus field link_lokasi secara konsisten.
+Terapkan role/policy admin.
+Samakan relasi menjadi satu nama, misalnya produks.
+Perbaiki validasi kontak dan URL eksternal.
+Benahi responsive header serta CTA detail.
+Tambahkan status produk dan informasi operasional UMKM.
+Pisahkan layout Blade dan tambahkan feature tests.
+
+Banner hero terlalu dekoratif dan belum menyampaikan identitas bisnis
+
+Banner hanya menggunakan gradient/pattern generik. Akan lebih kuat jika menampilkan foto usaha, produk unggulan, atau visual khas UMKM.
+
+Informasi bisnis belum cukup untuk membangun kepercayaan
+
+Pertimbangkan menambahkan:
+
+Tahun berdiri
+Jam operasional
+Area layanan
+Status verifikasi
+Jumlah produk
+Testimoni atau rating jika memang tersedia
+Navigasi kembali terlalu panjang di layar kecil
+
+Teks “Kembali ke Direktori UMKM” dapat membuat header sempit pada mobile. Gunakan ikon panah dengan label pendek atau ubah layout header secara responsif.
+
+Daftar produk tidak memakai pagination atau batas jumlah
+
+Semua produk dimuat sekaligus. UMKM dengan banyak produk akan menghasilkan query dan halaman yang berat.
+
+Kartu produk belum menunjukkan status stok
+
+Tombol “Lihat & Pesan Produk” mengesankan produk selalu tersedia. Sebaiknya ada status seperti “Tersedia”, “Pre-order”, atau “Hubungi penjual”.
+
+Tombol lokasi belum menjamin URL aman
+
+link_lokasi dirender langsung sebagai href. URL perlu divalidasi agar hanya menerima https:// dan idealnya domain Google Maps yang valid.

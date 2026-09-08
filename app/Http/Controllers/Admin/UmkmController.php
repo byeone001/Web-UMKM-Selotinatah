@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Umkm;
-use App\Models\Produk;
+use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class UmkmController extends Controller
@@ -18,9 +18,9 @@ class UmkmController extends Controller
         $query = Umkm::query();
 
         if ($request->filled('search')) {
-            $query->where('nama_umkm', 'like', '%' . $request->search . '%')
-                ->orWhere('pemilik', 'like', '%' . $request->search . '%')
-                ->orWhere('kategori', 'like', '%' . $request->search . '%');
+            $query->where('nama_umkm', 'like', '%'.$request->search.'%')
+                ->orWhere('pemilik', 'like', '%'.$request->search.'%')
+                ->orWhere('kategori', 'like', '%'.$request->search.'%');
         }
 
         $umkms = $query->latest()->paginate(10)->withQueryString();
@@ -33,12 +33,13 @@ class UmkmController extends Controller
      */
     public function create()
     {
-       return view('admin.umkm.create');
+        return view('admin.umkm.create');
     }
 
     public function edit($id)
     {
         $umkm = Umkm::findOrFail($id);
+
         return view('admin.umkm.edit', compact('umkm'));
     }
 
@@ -47,24 +48,11 @@ class UmkmController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama_umkm'   => 'required|string|max:100',
-            'pemilik'     => 'required|string|max:100',
-            'kategori'    => 'required|string|max:50',
-            'kontak'      => 'required|string|max:100',
-            'alamat'      => 'nullable|string',
-            'deskripsi'   => 'nullable|string',
-            'link_lokasi' => 'nullable|string|max:255',
-            'foto'        => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
-        ], [
-            'nama_umkm.required' => 'Nama UMKM wajib diisi.',
-            'pemilik.required'   => 'Nama pemilik usaha wajib diisi.',
-            'kategori.required'  => 'Kategori usaha wajib dipilih/diisi.',
-            'kontak.required'    => 'Nomor kontak WhatsApp wajib diisi.',
-            'foto.image'         => 'File harus berupa gambar.',
-            'foto.mimes'         => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
-            'foto.max'           => 'Ukuran foto maksimal 5 MB.',
+        $request->merge([
+            'kontak' => $this->normalizeWhatsAppNumber($request->input('kontak')),
         ]);
+
+        $validated = $request->validate($this->validationRules(), $this->validationMessages());
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('umkm', 'public');
@@ -81,6 +69,7 @@ class UmkmController extends Controller
     public function show(string $id)
     {
         $umkm = Umkm::findOrFail($id);
+
         return redirect()->route('admin.umkm.edit', $umkm->id_umkm);
     }
 
@@ -91,24 +80,11 @@ class UmkmController extends Controller
     {
         $umkm = Umkm::findOrFail($id);
 
-        $validated = $request->validate([
-            'nama_umkm'   => 'required|string|max:100',
-            'pemilik'     => 'required|string|max:100',
-            'kategori'    => 'required|string|max:50',
-            'kontak'      => 'required|string|max:100',
-            'alamat'      => 'nullable|string',
-            'deskripsi'   => 'nullable|string',
-            'link_lokasi' => 'nullable|string|max:255',
-            'foto'        => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
-        ], [
-            'nama_umkm.required' => 'Nama UMKM wajib diisi.',
-            'pemilik.required'   => 'Nama pemilik usaha wajib diisi.',
-            'kategori.required'  => 'Kategori usaha wajib dipilih/diisi.',
-            'kontak.required'    => 'Nomor kontak WhatsApp wajib diisi.',
-            'foto.image'         => 'File harus berupa gambar.',
-            'foto.mimes'         => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
-            'foto.max'           => 'Ukuran foto maksimal 5 MB.',
+        $request->merge([
+            'kontak' => $this->normalizeWhatsAppNumber($request->input('kontak')),
         ]);
+
+        $validated = $request->validate($this->validationRules(), $this->validationMessages());
 
         if ($request->hasFile('foto')) {
             if ($umkm->foto && Storage::disk('public')->exists($umkm->foto)) {
@@ -136,5 +112,70 @@ class UmkmController extends Controller
         $umkm->delete();
 
         return redirect()->route('admin.umkm.index')->with('success', 'Data UMKM berhasil dihapus.');
+    }
+
+    /**
+     * @return array<string, array<int, string|Closure>>
+     */
+    private function validationRules(): array
+    {
+        return [
+            'nama_umkm' => 'required|string|max:100',
+            'pemilik' => 'required|string|max:100',
+            'kategori' => 'required|string|max:50',
+            'kontak' => ['required', 'regex:/^628[1-9][0-9]{7,11}$/'],
+            'alamat' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'link_lokasi' => ['nullable', 'url:http,https', 'max:255', $this->googleMapsUrlRule()],
+            'foto' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function validationMessages(): array
+    {
+        return [
+            'nama_umkm.required' => 'Nama UMKM wajib diisi.',
+            'pemilik.required' => 'Nama pemilik usaha wajib diisi.',
+            'kategori.required' => 'Kategori usaha wajib dipilih/diisi.',
+            'kontak.required' => 'Nomor kontak WhatsApp wajib diisi.',
+            'kontak.regex' => 'Nomor WhatsApp harus menggunakan nomor Indonesia yang valid, misalnya 08123456789.',
+            'link_lokasi.url' => 'Link lokasi harus berupa URL yang valid.',
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
+            'foto.max' => 'Ukuran foto maksimal 5 MB.',
+            'link_lokasi.regex' => 'Link lokasi harus berasal dari Google Maps.',
+        ];
+    }
+
+    private function normalizeWhatsAppNumber(?string $phoneNumber): string
+    {
+        $digits = preg_replace('/\D+/', '', $phoneNumber ?? '') ?? '';
+
+        if (str_starts_with($digits, '0')) {
+            return '62'.substr($digits, 1);
+        }
+
+        return $digits;
+    }
+
+    private function googleMapsUrlRule(): Closure
+    {
+        return function (string $attribute, mixed $value, Closure $fail): void {
+            $host = strtolower((string) parse_url($value, PHP_URL_HOST));
+            $allowedHosts = [
+                'goo.gl',
+                'maps.app.goo.gl',
+                'maps.google.com',
+                'www.google.com',
+                'google.com',
+            ];
+
+            if (! in_array($host, $allowedHosts, true)) {
+                $fail('Link lokasi harus berasal dari Google Maps.');
+            }
+        };
     }
 }
