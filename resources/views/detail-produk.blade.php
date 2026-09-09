@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo-header.svg') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon-32x32.png') }}">
     <meta name="description" content="{{ $produk->nama_produk }} - Produk UMKM Desa Selotinatah, Ngariboyo, Magetan">
     <title>{{ $produk->nama_produk }} - UMKM Selotinatah</title>
 
@@ -16,7 +19,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body
+<body id="top"
     class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-emerald-600 selection:text-white flex flex-col min-h-screen">
 
     <!-- NAVBAR -->
@@ -25,10 +28,8 @@
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 sm:h-20 py-3 sm:py-0 flex items-center justify-between gap-3">
             <a href="{{ route('home') }}" aria-label="Beranda UMKM Selotinatah"
                 class="flex min-w-0 items-center gap-2 sm:gap-3 group">
-                <div
-                    class="w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-700 text-white flex items-center justify-center font-black text-lg sm:text-xl shadow-md group-hover:scale-105 transition-transform">
-                    S
-                </div>
+                <img src="{{ asset('images/logo-header.svg') }}" alt="Logo UMKM Selotinatah"
+                    class="w-10 h-10 object-contain group-hover:scale-105 transition-transform">
                 <div class="min-w-0">
                     <span
                         class="font-black text-sm sm:text-lg tracking-tight text-slate-900 block leading-none truncate">UMKM
@@ -205,19 +206,7 @@
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 text-white py-12 border-t border-slate-800 mt-auto">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-6">
-            <div>
-                <p class="font-black text-lg text-white">PORTAL UMKM DESA SELOTINATAH</p>
-                <p class="text-xs text-slate-400 mt-1">Lereng Gunung Lawu · Kec. Ngariboyo, Kab. Magetan, Jawa Timur</p>
-            </div>
-            <p class="text-xs text-slate-500">
-                &copy; {{ date('Y') }} Portal UMKM Desa Selotinatah. All rights reserved.
-            </p>
-        </div>
-    </footer>
+    @include('components.public-footer')
 
 </body>
 
