@@ -1,4 +1,3 @@
-
 <?php
 
 $directories = [
@@ -7,7 +6,6 @@ $directories = [
     '/tmp/storage/framework/cache',
     '/tmp/storage/logs',
     '/tmp/bootstrap/cache',
-    '/tmp/views',
 ];
 
 foreach ($directories as $dir) {
