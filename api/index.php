@@ -1,4 +1,18 @@
 <?php
 
-// Forward request to the public/index.php Laravel file
+// Buat folder sementara di /tmp agar Laravel tidak error read-only
+$directories = [
+    '/tmp/storage/framework/views',
+    '/tmp/storage/framework/sessions',
+    '/tmp/storage/framework/cache',
+    '/tmp/storage/logs',
+    '/tmp/bootstrap/cache',
+];
+
+foreach ($directories as $dir) {
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0777, true);
+    }
+}
+
 require __DIR__ . '/../public/index.php';
