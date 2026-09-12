@@ -30,6 +30,7 @@
     "SERVICES_CACHE": "/tmp/services.php",
     "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
     "LARAVEL_STORAGE_PATH": "/tmp/storage",
-    "SESSION_DRIVER": "cookie"
+    "SESSION_DRIVER": "cookie",
+    "CACHE_STORE": "file"
   }
 }

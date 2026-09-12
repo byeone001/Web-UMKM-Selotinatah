@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Umkm;
 use App\Models\Produk;
+use App\Models\Umkm;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -17,16 +17,22 @@ class DashboardController extends Controller
         $totalProduk = Produk::count();
         $totalKategori = Umkm::distinct('kategori')->count('kategori');
 
-        $latestUmkms = Umkm::latest()->take(5)->get();
-        $latestProduks = Produk::with('umkm')->latest()->take(5)->get();
+        $latestUmkms = Umkm::latest()
+            ->take(5)
+            ->get(['id_umkm', 'nama_umkm', 'pemilik', 'kategori', 'foto']);
+        $latestProduks = Produk::with('umkm:id_umkm,nama_umkm')
+            ->latest()
+            ->take(5)
+            ->get(['id_produk', 'id_umkm', 'nama_produk', 'harga', 'foto', 'created_at']);
 
         $berita = Cache::remember('berita_admin_live_v2', 3600, function () {
             try {
                 $response = Http::withoutVerifying()
                     ->withHeaders([
-                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                     ])
-                    ->timeout(6)
+                    ->connectTimeout(1)
+                    ->timeout(2)
                     ->get('https://selotinatah.magetan.go.id/berita/fetch-data?page=1');
 
                 if ($response->successful()) {
@@ -39,10 +45,10 @@ class DashboardController extends Controller
                             $slug = Str::slug($title);
                             $img = $post['img_url'] ?? '';
                             if ($img && str_starts_with($img, '/')) {
-                                $img = 'https://selotinatah.magetan.go.id' . $img;
+                                $img = 'https://selotinatah.magetan.go.id'.$img;
                             }
                             $link = "https://selotinatah.magetan.go.id/berita/view/{$id}-{$slug}";
-                            
+
                             $rawKonten = strip_tags(html_entity_decode($post['konten'] ?? ''));
                             $date = 'Warta Desa';
                             if (preg_match('/(Senin|Selasa|Rabu|Kamis|Jum[\'a-z]+|Sabtu|Minggu),\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}/u', $rawKonten, $matches)) {
@@ -53,14 +59,14 @@ class DashboardController extends Controller
                             $desc = Str::limit(trim($cleanDesc), 100);
 
                             $items[] = [
-                                'title'       => $title,
-                                'link'        => $link,
-                                'image'       => $img,
-                                'date'        => $date,
+                                'title' => $title,
+                                'link' => $link,
+                                'image' => $img,
+                                'date' => $date,
                                 'description' => $desc,
                             ];
                         }
-                        if (!empty($items)) {
+                        if (! empty($items)) {
                             return $items;
                         }
                     }
@@ -71,27 +77,27 @@ class DashboardController extends Controller
 
             return [
                 [
-                    'title'       => 'Peringatan Maulid Nabi Muhammad SAW di Jrakah, Dusun Banaran',
-                    'link'        => 'https://selotinatah.magetan.go.id/berita',
-                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14451_6a95811165caa7.55701157.jpeg',
-                    'date'        => 'Sabtu, 29 Agustus 2026',
+                    'title' => 'Peringatan Maulid Nabi Muhammad SAW di Jrakah, Dusun Banaran',
+                    'link' => 'https://selotinatah.magetan.go.id/berita',
+                    'image' => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14451_6a95811165caa7.55701157.jpeg',
+                    'date' => 'Sabtu, 29 Agustus 2026',
                     'description' => 'Masyarakat Jrakah, Dusun Banaran, Desa Selotinatah melaksanakan kegiatan peringatan Maulid Nabi dengan khidmat.',
                 ],
                 [
-                    'title'       => 'Kerja Bakti Masyarakat Desa Selotinatah',
-                    'link'        => 'https://selotinatah.magetan.go.id/berita',
-                    'image'       => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14450_6a957e63af5187.96721326.jpeg',
-                    'date'        => 'Minggu, 9 Agustus 2026',
+                    'title' => 'Kerja Bakti Masyarakat Desa Selotinatah',
+                    'link' => 'https://selotinatah.magetan.go.id/berita',
+                    'image' => 'https://selotinatah.magetan.go.id/media/img/berita/berita_14450_6a957e63af5187.96721326.jpeg',
+                    'date' => 'Minggu, 9 Agustus 2026',
                     'description' => 'Pemerintah Desa Selotinatah bersama warga melaksanakan kerja bakti lingkungan desa.',
                 ],
             ];
         });
 
         return view('dashboard', compact(
-            'totalUmkm', 
-            'totalProduk', 
-            'totalKategori', 
-            'latestUmkms', 
+            'totalUmkm',
+            'totalProduk',
+            'totalKategori',
+            'latestUmkms',
             'latestProduks',
             'berita'
         ));

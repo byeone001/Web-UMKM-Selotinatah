@@ -41,9 +41,14 @@ class PublicController extends Controller
                 $q->where('kategori', $kategoriSelected);
             });
         }
-        $produk = $produkQuery->latest()->take(8)->get();
+        $produk = $produkQuery
+            ->latest()
+            ->take(8)
+            ->get(['id_produk', 'id_umkm', 'nama_produk', 'deskripsi', 'harga', 'foto', 'created_at']);
 
-        $umkm = Umkm::latest()->take(6)->get();
+        $umkm = Umkm::latest()
+            ->take(6)
+            ->get(['id_umkm', 'nama_umkm', 'pemilik', 'kategori', 'deskripsi', 'foto', 'alamat', 'kontak', 'link_lokasi']);
 
         // Ambil berita langsung dari website resmi Desa Selotinatah
         $berita = Cache::remember('berita_desa_live_v2', 3600, function () {
@@ -52,7 +57,8 @@ class PublicController extends Controller
                     ->withHeaders([
                         'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                     ])
-                    ->timeout(6)
+                    ->connectTimeout(1)
+                    ->timeout(2)
                     ->get('https://selotinatah.magetan.go.id/berita/fetch-data?page=1');
 
                 if ($response->successful()) {
@@ -154,7 +160,11 @@ class PublicController extends Controller
         }
 
         $produk = $query->latest()->paginate(12);
-        $kategoriList = Umkm::select('kategori')->distinct()->pluck('kategori');
+        $kategoriList = Umkm::whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->distinct()
+            ->orderBy('kategori')
+            ->pluck('kategori');
 
         return view('katalog', compact('produk', 'kategoriList'));
     }
