@@ -18,6 +18,7 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
+    "APP_URL": "https://umkmselotinatah.vercel.app",
     "CONFIG_CACHE": "/tmp/config.php",
     "EVENTS_CACHE": "/tmp/events.php",
     "PACKAGES_CACHE": "/tmp/packages.php",
