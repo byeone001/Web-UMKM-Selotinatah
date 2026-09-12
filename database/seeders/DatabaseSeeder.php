@@ -10,10 +10,27 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin Selotinatah',
-            'email' => 'admin@selotinatah.desa.id',
-            'password' => Hash::make('selotinatahumkm'),
-        ]);
-    } 
+        User::updateOrCreate(
+            ['email' => 'admin@selotinatah.desa.id'],
+            [
+                'name' => 'Admin Selotinatah',
+                'password' => Hash::make('selotinatahumkm'),
+                'role' => 'admin',
+            ],
+        );
+
+        foreach ([
+            'ceraromaticitrus@gmail.com' => 'Ceraromaticitrus',
+            'pselotinatah@gmail.com' => 'P Selotinatah',
+        ] as $email => $name) {
+            User::updateOrCreate(
+                ['email' => $email],
+                [
+                    'name' => $name,
+                    'password' => Hash::make('selotinatahumkm'),
+                    'role' => 'admin',
+                ],
+            );
+        }
+    }
 }
