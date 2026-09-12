@@ -1,10 +1,14 @@
 <?php
 
+$storagePath = $_ENV['LARAVEL_STORAGE_PATH'] ?? $_SERVER['LARAVEL_STORAGE_PATH'] ?? dirname(__DIR__).'/storage';
+
 $directories = [
-    '/tmp/storage/framework/views',
-    '/tmp/storage/framework/sessions',
-    '/tmp/storage/framework/cache',
-    '/tmp/storage/logs',
+    $storagePath.'/framework/views',
+    $storagePath.'/framework/sessions',
+    $storagePath.'/framework/cache',
+    $storagePath.'/logs',
+    $storagePath.'/app/private',
+    $storagePath.'/app/public',
     '/tmp/bootstrap/cache',
 ];
 

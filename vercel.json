@@ -3,13 +3,13 @@
   "outputDirectory": "public",
   "functions": {
     "api/index.php": {
-      "runtime": "vercel-php"
+      "runtime": "vercel-php@0.8.0"
     }
   },
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "/public/build/$1"
+      "dest": "/build/$1"
     },
     {
       "src": "/(.*)",
@@ -24,6 +24,8 @@
     "PACKAGES_CACHE": "/tmp/packages.php",
     "ROUTES_CACHE": "/tmp/routes.php",
     "SERVICES_CACHE": "/tmp/services.php",
-    "VIEW_COMPILED_PATH": "/tmp"
+    "VIEW_COMPILED_PATH": "/tmp/storage/framework/views",
+    "LARAVEL_STORAGE_PATH": "/tmp/storage",
+    "SESSION_DRIVER": "cookie"
   }
 }
