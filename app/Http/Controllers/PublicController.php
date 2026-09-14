@@ -129,12 +129,37 @@ class PublicController extends Controller
             ];
         });
 
+        $kategoriInfo = [
+            [
+                'label' => 'Peternakan',
+                'icon' => '🐓',
+                'bgClass' => 'bg-amber-light',
+                'borderClass' => 'border-amber-subtle',
+                'desc' => 'Potensi peternakan dan hasil olahan ternak berkualitas dari warga desa.'
+            ],
+            [
+                'label' => 'Kerajinan',
+                'icon' => '🧺',
+                'bgClass' => 'bg-orange-light',
+                'borderClass' => 'border-orange-subtle',
+                'desc' => 'Kerajinan tangan dan anyaman bambu yang unik dan bernilai seni tinggi.'
+            ],
+            [
+                'label' => 'Kuliner',
+                'icon' => '🍲',
+                'bgClass' => 'bg-green-light',
+                'borderClass' => 'border-green-subtle',
+                'desc' => 'Jajanan, camilan, dan makanan khas lokal dengan cita rasa autentik.'
+            ]
+        ];
+
         // Kirimkan $kategoriList ke view
         return view('welcome', compact(
             'totalUmkm',
             'totalProduk',
             'totalKategori',
             'kategoriList',
+            'kategoriInfo',
             'produk',
             'umkm',
             'berita'
@@ -194,5 +219,36 @@ class PublicController extends Controller
         $linkWa = $noWa ? 'https://wa.me/'.$noWa.'?text='.urlencode($pesan) : null;
 
         return view('detail-umkm', compact('umkm', 'linkWa'));
+    }
+
+    // Halaman Daftar UMKM
+    public function daftarUmkm(Request $request)
+    {
+        $query = Umkm::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_umkm', 'like', '%' . $request->search . '%')
+                  ->orWhere('pemilik', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('kategori') && $request->kategori !== 'Semua') {
+            $query->where('kategori', $request->kategori);
+        }
+
+        $umkmList = $query->latest()->paginate(12);
+        
+        $kategoriList = Umkm::whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->distinct()
+            ->orderBy('kategori')
+            ->pluck('kategori');
+
+        return view('daftar-umkm', compact('umkmList', 'kategoriList'));
+    }
+
+    // Halaman Informasi Desa
+    public function informasiDesa()
+    {
+        return view('informasi-desa');
     }
 }

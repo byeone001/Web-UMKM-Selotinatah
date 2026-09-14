@@ -1,449 +1,264 @@
-<!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+@extends('layouts.public')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo-header.svg') }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <link rel="apple-touch-icon" href="{{ asset('favicon-32x32.png') }}">
-    <title>Portal UMKM & Potensi Desa Selotinatah - Magetan</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+@section('title', 'Beranda')
 
-<body id="top" class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-emerald-600 selection:text-white">
-
-    <!-- NAVBAR -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/logo-header.svg') }}" alt="Logo UMKM Selotinatah"
-                    class="w-10 h-10 object-contain group-hover:scale-105 transition-transform">
-                <div>
-                    <span class="font-black text-lg tracking-tight text-slate-900 block leading-none">UMKM
-                        SELOTINATAH</span>
-                    <span class="text-[11px] font-semibold text-emerald-700 tracking-wider uppercase">Kec. Ngariboyo,
-                        Magetan</span>
-                </div>
+@section('content')
+  <!-- Hero Section -->
+  <section class="hero-section text-white position-relative" style="background-image: url('https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=1600&h=900&fit=crop&auto=format');">
+    <div class="hero-overlay"></div>
+    <div class="container-xl px-3 px-sm-4 py-5 position-relative z-1 my-4">
+      <div class="row">
+        <div class="col-lg-7 col-md-9">
+          <div class="d-inline-block px-3 py-1 rounded-pill bg-white bg-opacity-20 text-white small fw-medium mb-3" style="font-size: 0.8rem;">
+            Etalase Digital UMKM Desa
+          </div>
+          <h1 class="font-serif fw-bold display-5 text-white lh-tight mb-3">
+            Kenali Potensi UMKM Desa Selotinatah
+          </h1>
+          <p class="text-white text-opacity-85 fs-5 lh-base mb-4 pe-lg-4">
+            Temukan berbagai usaha dan produk lokal Desa Selotinatah. Dukung pelaku usaha desa, kenali produknya, hubungi langsung.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="{{ route('umkm.index') }}" class="btn btn-light text-custom-primary fw-semibold px-4 py-2" style="border-radius: var(--radius-sm);">
+              Jelajahi UMKM
             </a>
-
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <a href="#beranda" class="text-emerald-600">Beranda</a>
-                <a href="#profil-desa" class="text-slate-600 hover:text-emerald-600 transition-colors">Profil Desa</a>
-                <a href="#produk" class="text-slate-600 hover:text-emerald-600 transition-colors">Katalog Produk</a>
-                <a href="#umkm" class="text-slate-600 hover:text-emerald-600 transition-colors">Mitra UMKM</a>
-                <a href="#berita" class="text-slate-600 hover:text-emerald-600 transition-colors">Kabar Desa</a>
-            </nav>
-
-            <div class="flex items-center gap-3">
-                <a href="{{ route('login') }}"
-                    class="inline-flex items-center gap-2 bg-slate-900 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                        </path>
-                    </svg>
-                    Panel Admin
-                </a>
-            </div>
+            <a href="{{ route('info-desa') }}" class="btn btn-custom-outline-white fw-semibold px-4 py-2">
+              Informasi Desa
+            </a>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </section>
 
-    <!-- HERO SECTION WITH QUICK SEARCH -->
-    <section id="beranda"
-        class="relative py-16 lg:py-24 bg-gradient-to-b from-emerald-50/70 via-emerald-50/20 to-slate-50 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <div
-                    class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-bold mb-6">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                    ⛰️ Kaki Gunung Lawu · Desa Selotinatah, Magetan
-                </div>
-                <h1
-                    class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-6">
-                    Jelajahi Produk Unggulan & <span
-                        class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Potensi Alam
-                        Desa</span>
-                </h1>
-                <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8">
-                    Wujud kemandirian ekonomi masyarakat Desa Selotinatah melalui ragam produk kuliner alami, kerajinan
-                    tangan, dan hasil usaha warga berkualitas dari lereng pegunungan yang sejuk.
+  <!-- Tentang Desa Section -->
+  <section class="container-xl px-3 px-sm-4 py-5 my-3">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6">
+        <div class="text-custom-accent fw-semibold small text-uppercase mb-2" style="letter-spacing: 0.1em; font-size: 0.75rem;">
+          Tentang Desa
+        </div>
+        <h2 class="font-serif fw-bold text-custom-foreground display-6 mb-3">
+          Desa Selotinatah
+        </h2>
+        <p class="text-custom-secondary lh-lg mb-3">
+          Desa Selotinatah terletak di Kecamatan Ngariboyo, Kabupaten Magetan, Jawa Timur. Desa ini memiliki beragam potensi UMKM yang dikelola oleh warga setempat, mulai dari peternakan, kerajinan tangan, hingga kuliner khas.
+        </p>
+        <p class="text-custom-secondary lh-lg mb-4">
+          Website ini hadir sebagai etalase digital untuk memperkenalkan dan mempromosikan UMKM Desa Selotinatah kepada masyarakat luas.
+        </p>
+        <a href="{{ route('info-desa') }}" class="text-decoration-none text-custom-primary fw-semibold small d-inline-flex align-items-center gap-1">
+          Pelajari lebih lanjut &rarr;
+        </a>
+      </div>
+      <div class="col-lg-6">
+        <div class="position-relative">
+          <img src="https://images.unsplash.com/photo-1588084188698-e626698fd8cb?w=700&h=500&fit=crop&auto=format" alt="Pemandangan Desa" class="w-100 object-fit-cover shadow-sm" style="height: 320px; border-radius: 16px;">
+          <div class="position-absolute bg-custom-primary text-white px-4 py-2 rounded-3 small fw-medium shadow" style="bottom: -14px; left: -14px;">
+            Kecamatan Ngariboyo, Magetan
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistik Desa Section (Dipertahankan dari lama, di-styling baru) -->
+  <section class="bg-custom-primary-dark text-white py-5">
+    <div class="container-xl px-3 px-sm-4">
+      <div class="row text-center g-4">
+        <div class="col-6 col-md-3">
+          <h3 class="display-5 fw-bold text-warning mb-1">{{ $totalUmkm }}</h3>
+          <p class="small text-white text-opacity-75 text-uppercase tracking-wider mb-0">UMKM Terdaftar</p>
+        </div>
+        <div class="col-6 col-md-3">
+          <h3 class="display-5 fw-bold text-info mb-1">{{ $totalProduk }}</h3>
+          <p class="small text-white text-opacity-75 text-uppercase tracking-wider mb-0">Produk Lokal</p>
+        </div>
+        <div class="col-6 col-md-3">
+          <h3 class="display-5 fw-bold text-success mb-1">{{ $totalKategori }}</h3>
+          <p class="small text-white text-opacity-75 text-uppercase tracking-wider mb-0">Kategori Usaha</p>
+        </div>
+        <div class="col-6 col-md-3">
+          <h3 class="display-5 fw-bold text-warning mb-1">100%</h3>
+          <p class="small text-white text-opacity-75 text-uppercase tracking-wider mb-0">Karya Asli Desa</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Potensi UMKM Kategori -->
+  <section class="bg-custom-secondary py-5">
+    <div class="container-xl px-3 px-sm-4">
+      <div class="text-center mb-5">
+        <div class="text-custom-accent fw-semibold small text-uppercase mb-2" style="letter-spacing: 0.1em; font-size: 0.75rem;">
+          Kategori
+        </div>
+        <h2 class="font-serif fw-bold text-custom-foreground display-6">
+          Potensi UMKM Desa
+        </h2>
+        <p class="text-custom-muted small mt-2">
+          Sektor utama UMKM yang berkembang di Desa Selotinatah
+        </p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        @if(isset($kategoriInfo))
+          @foreach($kategoriInfo as $k)
+            <div class="col-md-4">
+              <div class="rounded-4 border p-4 text-center h-100 d-flex flex-column {{ $k['bgClass'] }} {{ $k['borderClass'] }}">
+                <div class="fs-1 mb-2">{{ $k['icon'] }}</div>
+                <h3 class="font-serif fw-semibold fs-5 mb-2">{{ $k['label'] }}</h3>
+                <p class="text-custom-secondary small lh-base mb-3 flex-grow-1">
+                  {{ $k['desc'] }}
                 </p>
-
-                <!-- FORM PENCARIAN INTERAKTIF -->
-                <form action="{{ url('/') }}#produk" method="GET" class="relative max-w-2xl mx-auto mb-6">
-                    <div
-                        class="flex items-center bg-white p-2 rounded-2xl shadow-xl border border-slate-200/80 focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-100 transition-all">
-                        <div class="pl-3 text-slate-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                        <input type="text" name="q" value="{{ $search ?? '' }}"
-                            placeholder="Cari produk desa, jajanan, hasil tani, atau usaha..."
-                            class="w-full px-4 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 bg-transparent border-none focus:outline-none focus:ring-0">
-                        <button type="submit"
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-md">
-                            Cari Produk
-                        </button>
-                    </div>
-                </form>
-
-                <!-- QUICK FILTER BADGES -->
-                @if(isset($kategoriList) && count($kategoriList) > 0)
-                    <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-slate-500">
-                        <span class="text-slate-400">Kategori Pilihan:</span>
-                        <a href="{{ url('/') }}#produk"
-                            class="px-3 py-1 rounded-lg bg-white border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">Semua</a>
-                        @foreach($kategoriList as $kat)
-                            <a href="{{ url('/?kategori=' . urlencode($kat)) }}#produk"
-                                class="px-3 py-1 rounded-lg bg-white border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">
-                                {{ $kat }}
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
-        </div>
-    </section>
-
-    <!-- STATISTIK INTERAKTIF DESA -->
-    <section class="py-10 bg-slate-900 text-white border-y border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="p-4">
-                    <p class="text-3xl sm:text-4xl font-black text-emerald-400 mb-1">{{ $totalUmkm }}</p>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">UMKM Terdaftar</p>
-                </div>
-                <div class="p-4">
-                    <p class="text-3xl sm:text-4xl font-black text-teal-300 mb-1">{{ $totalProduk }}</p>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Produk Lokal</p>
-                </div>
-                <div class="p-4">
-                    <p class="text-3xl sm:text-4xl font-black text-lime-400 mb-1">{{ $totalKategori }}</p>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kategori Usaha</p>
-                </div>
-                <div class="p-4">
-                    <p class="text-3xl sm:text-4xl font-black text-amber-400 mb-1">100%</p>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Karya Asli Desa</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEKSI PROFIL & POTENSI DESA SELOTINATAH -->
-    <section id="profil-desa" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-6 space-y-6">
-                    <div
-                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider">
-                        🌿 Pesona & Profil Desa
-                    </div>
-                    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                        Mengenal Desa Selotinatah
-                    </h2>
-                    <p class="text-slate-600 leading-relaxed">
-                        Desa Selotinatah terletak di kawasan sejuk kaki Gunung Lawu, Kecamatan Ngariboyo, Kabupaten
-                        Magetan. Udara yang segar dan kekayaan alam lokal menjadi modal utama tumbuh dan berkembangnya
-                        kreativitas ekonomi masyarakat desa.
-                    </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                        <div class="p-4 rounded-xl bg-emerald-50/50 border border-emerald-100">
-                            <h4 class="font-bold text-slate-900 text-sm mb-1">🍃 Olahan Pangan Alami</h4>
-                            <p class="text-xs text-slate-600">Jajanan khas, camilan renyah, serta hasil olahan pertanian
-                                warga desa.</p>
-                        </div>
-                        <div class="p-4 rounded-xl bg-emerald-50/50 border border-emerald-100">
-                            <h4 class="font-bold text-slate-900 text-sm mb-1">🎨 Kerajinan Tangan Lokal</h4>
-                            <p class="text-xs text-slate-600">Kreativitas pengrajin desa yang memanfaatkan bahan alami
-                                berkualitas.</p>
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <a href="https://selotinatah.magetan.go.id/" target="_blank"
-                            class="inline-flex items-center gap-2 font-bold text-sm text-emerald-700 hover:text-emerald-800">
-                            <span>Kunjungi Website Resmi Desa Selotinatah</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-6">
-                    <div
-                        class="relative bg-gradient-to-br from-emerald-800 via-teal-800 to-slate-900 rounded-3xl p-8 text-white shadow-2xl overflow-hidden">
-                        <div class="relative z-10 space-y-4">
-                            <span
-                                class="px-3 py-1 rounded-md bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider">Info
-                                Geografis</span>
-                            <h3 class="text-2xl font-bold">Pusat Penggerak Ekonomi Kreatif Desa</h3>
-                            <p class="text-sm text-emerald-100 leading-relaxed">
-                                Portal UMKM ini hadir sebagai sarana publikasi dan promosi produk lokal agar dapat
-                                menjangkau pasar yang lebih luas, baik di tingkat Kabupaten Magetan maupun skala
-                                nasional.
-                            </p>
-                            <div
-                                class="pt-4 border-t border-white/20 flex items-center justify-between text-xs text-emerald-200">
-                                <span>📍 Kec. Ngariboyo</span>
-                                <span>Kab. Magetan, Jawa Timur</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- KATALOG PRODUK TERBARU -->
-    <section id="produk" class="py-16 bg-slate-50 border-t border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
                 <div>
-                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Katalog Unggulan</span>
-                    <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1">Produk Terbaru UMKM</h2>
+                  <a href="{{ route('umkm.index', ['kategori' => $k['label']]) }}" class="text-decoration-none text-custom-primary small fw-semibold">
+                    Lihat UMKM &rarr;
+                  </a>
                 </div>
-                @if(isset($search) || isset($kategoriSelected))
-                    <a href="{{ url('/') }}#produk" class="text-xs font-bold text-red-600 hover:underline">Reset Filter /
-                        Pencarian</a>
-                @endif
+              </div>
             </div>
+          @endforeach
+        @endif
+      </div>
+    </div>
+  </section>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @forelse($produk as $p)
-                    <div
-                        class="bg-white rounded-2xl border border-slate-200/80 shadow-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
-                        <div>
-                            <!-- Product Image -->
-                            <div class="relative h-48 bg-slate-100 overflow-hidden">
-                                @if($p->foto)
-                                    <img src="{{ asset('storage/' . $p->foto) }}" alt="{{ $p->nama_produk }}"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                @else
-                                    <div
-                                        class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 text-emerald-700/60 weave-bg">
-                                        <svg class="w-10 h-10 mb-1 opacity-70" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        <span class="text-[11px] font-bold">Kerajinan Selotinatah</span>
-                                    </div>
-                                @endif
-                                <span
-                                    class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-md text-slate-800 font-bold text-[10px] shadow-sm">
-                                    {{ $p->umkm->kategori ?? 'Kerajinan' }}
-                                </span>
-                            </div>
-
-                            <div class="p-5">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-bold text-emerald-700">
-                                        Rp {{ number_format($p->harga, 0, ',', '.') }}
-                                    </span>
-                                </div>
-
-                                <h3
-                                    class="font-bold text-slate-900 text-base group-hover:text-emerald-600 transition-colors line-clamp-1 mb-1">
-                                    {{ $p->nama_produk }}
-                                </h3>
-                                <p class="text-xs font-semibold text-slate-400 mb-2">
-                                    Oleh: <span
-                                        class="text-slate-700 font-medium">{{ $p->umkm->nama_umkm ?? 'UMKM Desa' }}</span>
-                                </p>
-                                <p class="text-slate-500 text-xs leading-relaxed line-clamp-2">
-                                    {{ $p->deskripsi ?? 'Produk kerajinan dan olahan khas Desa Selotinatah, Magetan.' }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-                            <span
-                                class="text-[11px] text-slate-400 truncate max-w-[120px]">{{ $p->umkm->pemilik ?? '-' }}</span>
-                            <a href="{{ route('produk.detail', $p->id_produk) }}"
-                                class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-800 transition-colors">
-                                Detail & Pesan
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                    </path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-span-full bg-white p-12 rounded-2xl border border-dashed border-slate-300 text-center">
-                        <p class="text-slate-600 font-semibold">Produk tidak ditemukan.</p>
-                        <p class="text-xs text-slate-400 mt-1">Coba gunakan kata kunci lain atau pilih kategori berbeda.</p>
-                    </div>
-                @endforelse
-            </div>
-
-            <!-- Tombol Lihat Semua Katalog -->
-            <div class="mt-10 text-center">
-                <a href="{{ route('katalog') }}"
-                    class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-slate-200 hover:border-emerald-400 text-slate-800 hover:text-emerald-700 font-bold text-sm shadow-sm hover:shadow-md transition-all">
-                    <span>Lihat Seluruh Katalog Produk ({{ $totalProduk }})</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </a>
-            </div>
+  <!-- UMKM Unggulan -->
+  <section class="container-xl px-3 px-sm-4 py-5 my-3">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <div class="text-custom-accent fw-semibold small text-uppercase mb-1" style="letter-spacing: 0.1em; font-size: 0.75rem;">
+          Penggerak Ekonomi Desa
         </div>
-    </section>
+        <h2 class="font-serif fw-bold text-custom-foreground display-6 mb-0">
+          Pelaku UMKM Selotinatah
+        </h2>
+      </div>
+      <a href="{{ route('umkm.index') }}" class="d-none d-sm-inline-flex text-decoration-none text-custom-primary small fw-semibold">
+        Lihat Semua &rarr;
+      </a>
+    </div>
 
-    <!-- DIREKTORI MITRA UMKM DESA -->
-    <section id="umkm" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-10 text-center max-w-2xl mx-auto">
-                <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Penggerak Ekonomi Desa</span>
-                <h2 class="text-3xl font-black text-slate-900 tracking-tight mt-1">Pelaku UMKM Selotinatah</h2>
-                <p class="text-slate-500 text-sm mt-2">Daftar usaha lokal warga desa yang siap melayani kebutuhan Anda
-                    dengan kualitas terbaik.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($umkm as $u)
-                    <div
-                        class="bg-slate-50/80 p-6 rounded-2xl border border-slate-200/80 hover:border-emerald-300 hover:bg-white hover:shadow-lg transition-all group">
-                        <div class="flex items-start gap-4 mb-4">
-                            @if($u->foto)
-                                <img src="{{ asset('storage/' . $u->foto) }}" alt="{{ $u->nama_umkm }}"
-                                    class="w-14 h-14 rounded-xl object-cover border border-slate-200 shadow-sm flex-shrink-0">
-                            @else
-                                <div
-                                    class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-black text-xl shadow-sm flex-shrink-0">
-                                    {{ substr($u->nama_umkm, 0, 1) }}
-                                </div>
-                            @endif
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between gap-2">
-                                    <h3
-                                        class="font-bold text-slate-900 text-base truncate group-hover:text-emerald-700 transition-colors">
-                                        {{ $u->nama_umkm }}
-                                    </h3>
-                                </div>
-                                <p class="text-xs text-slate-500 font-medium">Pemilik: {{ $u->pemilik }}</p>
-                                <span
-                                    class="inline-block mt-1 px-2.5 py-0.5 rounded-md bg-emerald-100/80 text-emerald-800 font-semibold text-[10px]">
-                                    {{ $u->kategori }}
-                                </span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-600 line-clamp-2 mb-4">
-                            📍 {{ $u->alamat ?? 'Desa Selotinatah, Kec. Ngariboyo, Magetan' }}
-                        </p>
-                        <div class="pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                            <span class="text-[11px] text-slate-400">Hubungi: {{ $u->kontak }}</span>
-                            <a href="{{ route('umkm.detail', $u->id_umkm) }}"
-                                class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-800">
-                                Profil & Produk &rarr;
-                            </a>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-span-full text-center py-8 text-slate-400 text-sm">Belum ada data UMKM.</div>
-                @endforelse
-            </div>
+    <div class="row g-4">
+      @foreach($umkm->take(3) as $u)
+        <div class="col-md-4 col-sm-6">
+          <x-umkm-card-new :umkm="$u" />
         </div>
-    </section>
+      @endforeach
+    </div>
 
-    <!-- SEKSI BERITA DESA SELOTINATAH -->
-    <section id="berita" class="py-16 bg-gradient-to-b from-slate-50 to-white border-t border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-                <div>
-                    <div
-                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-3">
-                        Kabar Terkini
-                    </div>
-                    <h2 class="text-3xl font-black text-slate-900 tracking-tight">Berita & Informasi Desa</h2>
-                    <p class="text-slate-500 text-sm mt-1">Dapatkan update seputar kegiatan, potensi, dan pembangunan
-                        Desa Selotinatah.</p>
+    <div class="text-center mt-5">
+      <a href="{{ route('umkm.index') }}" class="btn btn-custom-outline-thick">
+        Lihat Semua UMKM
+      </a>
+    </div>
+  </section>
+
+  <!-- KATALOG PRODUK TERBARU -->
+  <section class="bg-custom-secondary py-5">
+    <div class="container-xl px-3 px-sm-4">
+        <div class="d-flex flex-column sm:flex-row sm:items-end justify-content-between mb-4 gap-3">
+            <div>
+                <div class="text-custom-accent fw-semibold small text-uppercase mb-1" style="letter-spacing: 0.1em; font-size: 0.75rem;">
+                    Katalog Unggulan
                 </div>
-                <a href="https://selotinatah.magetan.go.id/" target="_blank"
-                    class="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700 bg-white hover:bg-emerald-50 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-emerald-200 transition-all shadow-sm">
-                    <span>Kunjungi Web Desa</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </a>
+                <h2 class="font-serif fw-bold text-custom-foreground display-6 mb-0">
+                    Produk Terbaru UMKM
+                </h2>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($berita as $b)
-                    <article
-                        class="group bg-white rounded-2xl shadow-card border border-slate-200/80 hover:border-emerald-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
-                        <div>
-                            @if(!empty($b['image']))
-                                <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
-                                    <img src="{{ $b['image'] }}" alt="{{ $b['title'] }}"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        onerror="this.parentElement.style.display='none'">
-                                    <span
-                                        class="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-md text-emerald-800 text-[10px] font-bold shadow-sm">
-                                        Website Resmi Desa
-                                    </span>
-                                </div>
-                            @else
-                                <div
-                                    class="h-24 w-full bg-gradient-to-r from-emerald-700 to-teal-800 weave-bg p-4 flex items-end">
-                                    <span
-                                        class="px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-md text-emerald-800 text-[10px] font-bold shadow-sm">
-                                        Kabar Desa
-                                    </span>
-                                </div>
-                            @endif
-
-                            <div class="p-6">
-                                <div class="flex items-center justify-between gap-2 mb-3">
-                                    <span
-                                        class="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold">Berita
-                                        Resmi</span>
-                                    <span class="text-xs font-medium text-slate-400">{{ $b['date'] }}</span>
-                                </div>
-                                <h3
-                                    class="font-bold text-slate-900 text-base group-hover:text-emerald-600 transition-colors duration-200 line-clamp-2 mb-3">
-                                    <a href="{{ $b['link'] }}" target="_blank"
-                                        rel="noopener noreferrer">{{ $b['title'] }}</a>
-                                </h3>
-                                <p class="text-slate-600 text-xs leading-relaxed line-clamp-3">
-                                    {{ $b['description'] }}
-                                </p>
-                            </div>
-                        </div>
-                        <div
-                            class="px-6 pb-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-600">
-                            <a href="{{ $b['link'] }}" target="_blank" rel="noopener noreferrer"
-                                class="inline-flex items-center gap-1.5 hover:text-emerald-800">
-                                <span>Baca di Web Desa</span>
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                            </a>
-                            <div
-                                class="w-8 h-8 rounded-xl bg-emerald-50 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </div>
-                        </div>
-                    </article>
-                @empty
-                    <div class="col-span-full text-center py-8 text-slate-400 text-sm">Belum ada berita.</div>
-                @endforelse
-            </div>
+            <a href="{{ route('katalog') }}" class="text-decoration-none text-custom-primary small fw-semibold">
+                Lihat Seluruh Katalog &rarr;
+            </a>
         </div>
-    </section>
 
-    @include('components.public-footer')
+        <div class="row g-4">
+            @forelse($produk as $p)
+                <div class="col-xl-3 col-lg-4 col-sm-6">
+                    <x-produk-card-new :produk="$p" />
+                </div>
+            @empty
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted font-semibold">Produk tidak ditemukan.</p>
+                </div>
+            @endforelse
+        </div>
+    </div>
+  </section>
 
-</body>
+  <!-- SEKSI BERITA DESA SELOTINATAH -->
+  <section class="container-xl px-3 px-sm-4 py-5 my-3">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+          <div>
+              <div class="text-custom-accent fw-semibold small text-uppercase mb-1" style="letter-spacing: 0.1em; font-size: 0.75rem;">
+                  Kabar Terkini
+              </div>
+              <h2 class="font-serif fw-bold text-custom-foreground display-6 mb-0">
+                  Berita & Informasi Desa
+              </h2>
+              <p class="text-custom-muted small mt-2 mb-0">
+                  Dapatkan update seputar kegiatan, potensi, dan pembangunan Desa Selotinatah.
+              </p>
+          </div>
+          <a href="https://selotinatah.magetan.go.id/" target="_blank" class="btn btn-custom-outline-primary d-inline-flex align-items-center gap-2">
+              <span>Kunjungi Web Desa</span>
+              <i class="bi bi-box-arrow-up-right"></i>
+          </a>
+      </div>
 
-</html>
+      <div class="row g-4">
+          @forelse($berita as $b)
+              <div class="col-md-4">
+                  <div class="card-custom h-100">
+                      @if(!empty($b['image']))
+                          <div class="card-img-wrapper" style="height: 180px;">
+                              <img src="{{ $b['image'] }}" alt="{{ $b['title'] }}" class="w-100 h-100 object-fit-cover" onerror="this.parentElement.style.display='none'">
+                              <span class="position-absolute top-0 start-0 m-2 px-2 py-1 rounded bg-white bg-opacity-75 text-dark small fw-bold" style="font-size: 0.7rem; backdrop-filter: blur(4px);">
+                                  Website Resmi Desa
+                              </span>
+                          </div>
+                      @endif
+                      <div class="p-4 d-flex flex-column flex-grow-1">
+                          <div class="d-flex align-items-center justify-content-between mb-2">
+                              <span class="badge bg-custom-primary bg-opacity-10 text-custom-primary">Berita Resmi</span>
+                              <span class="small text-muted" style="font-size: 0.75rem;">{{ $b['date'] }}</span>
+                          </div>
+                          <h3 class="font-serif fw-bold fs-6 mb-2 line-clamp-2">
+                              <a href="{{ $b['link'] }}" target="_blank" class="text-decoration-none text-dark">{{ $b['title'] }}</a>
+                          </h3>
+                          <p class="text-muted small line-clamp-3 mb-3 flex-grow-1">
+                              {{ $b['description'] }}
+                          </p>
+                          <div class="border-top pt-3">
+                              <a href="{{ $b['link'] }}" target="_blank" class="text-decoration-none text-custom-primary small fw-semibold d-flex align-items-center gap-1">
+                                  Baca di Web Desa <i class="bi bi-arrow-right"></i>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          @empty
+              <div class="col-12 text-center py-5 text-muted small">Belum ada berita.</div>
+          @endforelse
+      </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-custom-primary text-white py-5 text-center">
+    <div class="container-xl px-3 px-sm-4 py-3">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          <h2 class="font-serif fw-bold display-6 mb-3">
+            Temukan UMKM Lokal Selotinatah
+          </h2>
+          <p class="text-white text-opacity-80 mb-4 lh-base">
+            Kenali lebih dekat para pelaku usaha desa. Temukan produk lokal berkualitas dan hubungi langsung UMKM pilihan Anda.
+          </p>
+          <a href="{{ route('umkm.index') }}" class="btn btn-light text-custom-primary fw-semibold px-4 py-2.5 rounded-3">
+            Lihat Semua UMKM
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+@endsection

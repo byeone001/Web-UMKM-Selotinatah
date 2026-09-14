@@ -15,6 +15,10 @@ class Umkm extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'tahun_mulai' => 'integer',
+    ];
+
     public function whatsappNumber(): ?string
     {
         $digits = preg_replace('/\D+/', '', $this->kontak ?? '') ?? '';

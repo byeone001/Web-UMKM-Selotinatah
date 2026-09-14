@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Route;
 
 // Rute Publik (Tidak Perlu Login)
 Route::get('/', [PublicController::class, 'index'])->name('home');
+Route::get('/informasi-desa', [PublicController::class, 'informasiDesa'])->name('info-desa');
 Route::get('/katalog', [PublicController::class, 'katalog'])->name('katalog');
+Route::get('/daftar-umkm', [PublicController::class, 'daftarUmkm'])->name('umkm.index');
 Route::get('/produk/{id}', [PublicController::class, 'detailProduk'])->name('produk.detail');
 Route::get('/umkm/{id}', [PublicController::class, 'detailUmkm'])->name('umkm.detail');
 
