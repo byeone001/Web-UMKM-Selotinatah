@@ -20,7 +20,7 @@
           <!-- Foto UMKM -->
           <div class="rounded-4 overflow-hidden bg-custom-muted shadow-sm position-relative" style="height: 280px;">
             @if($umkm->foto)
-              <img src="{{ asset('storage/' . $umkm->foto) }}" alt="{{ $umkm->nama_umkm }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=600&h=400&fit=crop&auto=format'">
+              <img src="{{ Storage::disk('supabase')->url($umkm->foto) }}" alt="{{ $umkm->nama_umkm }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=600&h=400&fit=crop&auto=format'">
             @else
               <img src="https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=600&h=400&fit=crop&auto=format" alt="{{ $umkm->nama_umkm }}" class="w-100 h-100 object-fit-cover">
             @endif

@@ -95,7 +95,7 @@
                     @if($produk->foto)
                         <div class="mb-3 p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-3"
                             x-show="!photoPreview">
-                            <img src="{{ asset('storage/' . $produk->foto) }}"
+                            <img src="{{ Storage::disk('supabase')->url($produk->foto) }}"
                                 class="w-16 h-16 rounded-xl object-cover border border-slate-200">
                             <div>
                                 <p class="text-xs font-bold text-slate-700">Foto produk saat ini</p>

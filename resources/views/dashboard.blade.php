@@ -217,7 +217,7 @@
                         <div class="flex items-center justify-between px-6 py-3.5 hover:bg-slate-50 transition-colors">
                             <div class="flex items-center gap-3 min-w-0">
                                 @if($p->foto)
-                                    <img src="{{ asset('storage/' . $p->foto) }}"
+                                    <img src="{{ Storage::disk('supabase')->url($p->foto) }}"
                                          class="w-9 h-9 rounded-xl object-cover flex-shrink-0 border border-slate-200">
                                 @else
                                     <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-black text-sm flex-shrink-0">

@@ -134,7 +134,7 @@
                         <div class="mb-3 p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between"
                             x-show="!photoPreview">
                             <div class="flex items-center gap-3">
-                                <img src="{{ asset('storage/' . $umkm->foto) }}"
+                                <img src="{{ Storage::disk('supabase')->url($umkm->foto) }}"
                                     class="w-16 h-16 rounded-xl object-cover border border-slate-300 shadow-sm">
                                 <div>
                                     <p class="text-xs font-bold text-slate-800">Foto Saat Ini Tersimpan</p>

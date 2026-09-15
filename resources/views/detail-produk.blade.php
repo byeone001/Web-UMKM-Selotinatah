@@ -25,7 +25,7 @@
       <div class="col-lg-6">
         <div class="rounded-4 overflow-hidden bg-custom-muted shadow-sm position-relative mb-3" style="height: 380px;">
           @if($firstGalleryImage)
-            <img id="mainImage" src="{{ asset('storage/' . $firstGalleryImage) }}" alt="{{ $produk->nama_produk }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=800&h=600&fit=crop&auto=format'">
+            <img id="mainImage" src="{{ Storage::disk('supabase')->url($firstGalleryImage) }}" alt="{{ $produk->nama_produk }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=800&h=600&fit=crop&auto=format'">
           @else
             <img src="https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=800&h=600&fit=crop&auto=format" alt="{{ $produk->nama_produk }}" class="w-100 h-100 object-fit-cover">
           @endif
@@ -40,9 +40,9 @@
               <div 
                 class="rounded-3 overflow-hidden border border-2 border-custom cursor-pointer gallery-thumbnail" 
                 style="width: 70px; height: 70px; flex-shrink: 0;"
-                onclick="document.getElementById('mainImage').src = '{{ asset('storage/' . $galleryImage) }}'; document.querySelectorAll('.gallery-thumbnail').forEach(el => el.classList.remove('border-primary')); this.classList.add('border-primary');"
+                onclick="document.getElementById('mainImage').src = '{{ Storage::disk('supabase')->url($galleryImage) }}'; document.querySelectorAll('.gallery-thumbnail').forEach(el => el.classList.remove('border-primary')); this.classList.add('border-primary');"
               >
-                <img src="{{ asset('storage/' . $galleryImage) }}" alt="{{ $produk->nama_produk }} - foto {{ $index + 1 }}" class="w-100 h-100 object-fit-cover">
+                <img src="{{ Storage::disk('supabase')->url($galleryImage) }}" alt="{{ $produk->nama_produk }} - foto {{ $index + 1 }}" class="w-100 h-100 object-fit-cover">
               </div>
             @endforeach
           </div>

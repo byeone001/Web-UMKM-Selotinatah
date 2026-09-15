@@ -55,7 +55,7 @@ class UmkmController extends Controller
         $validated = $request->validate($this->validationRules(), $this->validationMessages());
 
         if ($request->hasFile('foto')) {
-            $validated['foto'] = $request->file('foto')->store('umkm', 'public');
+            $validated['foto'] = $request->file('foto')->store('umkm', 'supabase');
         }
 
         Umkm::create($validated);
@@ -87,10 +87,10 @@ class UmkmController extends Controller
         $validated = $request->validate($this->validationRules(), $this->validationMessages());
 
         if ($request->hasFile('foto')) {
-            if ($umkm->foto && Storage::disk('public')->exists($umkm->foto)) {
-                Storage::disk('public')->delete($umkm->foto);
+            if ($umkm->foto && Storage::disk('supabase')->exists($umkm->foto)) {
+                Storage::disk('supabase')->delete($umkm->foto);
             }
-            $validated['foto'] = $request->file('foto')->store('umkm', 'public');
+            $validated['foto'] = $request->file('foto')->store('umkm', 'supabase');
         }
 
         $umkm->update($validated);
@@ -105,8 +105,8 @@ class UmkmController extends Controller
     {
         $umkm = Umkm::findOrFail($id);
 
-        if ($umkm->foto && Storage::disk('public')->exists($umkm->foto)) {
-            Storage::disk('public')->delete($umkm->foto);
+        if ($umkm->foto && Storage::disk('supabase')->exists($umkm->foto)) {
+            Storage::disk('supabase')->delete($umkm->foto);
         }
 
         $umkm->delete();

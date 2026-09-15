@@ -3,7 +3,7 @@
 <div class="card-custom">
   <div class="card-img-wrapper" style="height: 175px;">
     @if($produk->foto)
-      <img src="{{ asset('storage/' . $produk->foto) }}" alt="{{ $produk->nama_produk }}" loading="lazy">
+      <img src="{{ Storage::disk('supabase')->url($produk->foto) }}" alt="{{ $produk->nama_produk }}" loading="lazy">
     @else
       <img src="https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=400&h=300&fit=crop&auto=format" alt="{{ $produk->nama_produk }}" loading="lazy">
     @endif

@@ -77,7 +77,7 @@
                             <tr>
                                 <td class="pl-6">
                                     @if($item->foto)
-                                        <img src="{{ asset('storage/' . $item->foto) }}"
+                                        <img src="{{ Storage::disk('supabase')->url($item->foto) }}"
                                             class="w-11 h-11 rounded-xl object-cover border border-slate-200">
                                     @else
                                         <div

@@ -66,14 +66,14 @@ class ProdukController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $validated['foto'] = $request->file('foto')->store('produk', 'public');
+            $validated['foto'] = $request->file('foto')->store('products', 'supabase');
         }
 
         $produk = Produk::create(collect($validated)->except('fotos')->all());
 
         foreach ($request->file('fotos', []) as $index => $photo) {
             $produk->fotos()->create([
-                'foto' => $photo->store('produk/gallery', 'public'),
+                'foto' => $photo->store('products/gallery', 'supabase'),
                 'urutan' => $index,
             ]);
         }
@@ -130,10 +130,10 @@ class ProdukController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
-                Storage::disk('public')->delete($produk->foto);
+            if ($produk->foto && Storage::disk('supabase')->exists($produk->foto)) {
+                Storage::disk('supabase')->delete($produk->foto);
             }
-            $validated['foto'] = $request->file('foto')->store('produk', 'public');
+            $validated['foto'] = $request->file('foto')->store('products', 'supabase');
         }
 
         $produk->update(collect($validated)->except('fotos')->all());
@@ -141,7 +141,7 @@ class ProdukController extends Controller
         $nextOrder = (int) $produk->fotos()->max('urutan') + 1;
         foreach ($request->file('fotos', []) as $index => $photo) {
             $produk->fotos()->create([
-                'foto' => $photo->store('produk/gallery', 'public'),
+                'foto' => $photo->store('products/gallery', 'supabase'),
                 'urutan' => $nextOrder + $index,
             ]);
         }
@@ -156,8 +156,14 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
 
-        if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
-            Storage::disk('public')->delete($produk->foto);
+        if ($produk->foto && Storage::disk('supabase')->exists($produk->foto)) {
+            Storage::disk('supabase')->delete($produk->foto);
+        }
+
+        foreach ($produk->fotos as $fotoGallery) {
+            if (Storage::disk('supabase')->exists($fotoGallery->foto)) {
+                Storage::disk('supabase')->delete($fotoGallery->foto);
+            }
         }
 
         $produk->delete();
