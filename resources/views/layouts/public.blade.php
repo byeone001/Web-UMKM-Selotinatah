@@ -21,12 +21,6 @@
   <!-- Custom Theme CSS -->
   <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
-  <!-- Vite CSS & JS -->
-  <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
-
- <!-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> -->
- <!-- <script src="{{ mix('js/app.js') }}"></script> -->
-
   @stack('styles')
 </head>
 <body>
