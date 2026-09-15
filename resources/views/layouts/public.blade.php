@@ -21,6 +21,9 @@
   <!-- Custom Theme CSS -->
   <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
+  <!-- Vite CSS & JS -->
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+
   @stack('styles')
 </head>
 <body>
