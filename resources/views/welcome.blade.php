@@ -55,7 +55,7 @@
         <div class="position-relative">
           <img src="https://images.unsplash.com/photo-1588084188698-e626698fd8cb?w=700&h=500&fit=crop&auto=format" alt="Pemandangan Desa" class="w-100 object-fit-cover shadow-sm" style="height: 320px; border-radius: 16px;">
           <div class="position-absolute bg-custom-primary text-white px-4 py-2 rounded-3 small fw-medium shadow" style="bottom: -14px; left: -14px;">
-            Kecamatan Ngariboyo, Magetan
+            Selotinatah, Ngariboyo, Magetan
           </div>
         </div>
       </div>

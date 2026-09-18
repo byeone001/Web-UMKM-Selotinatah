@@ -249,6 +249,54 @@ class PublicController extends Controller
     // Halaman Informasi Desa
     public function informasiDesa()
     {
-        return view('informasi-desa');
+        $profil = \App\Models\ProfilDesa::first() ?? new \App\Models\ProfilDesa();
+
+        // Ambil data demografi real-time dari website resmi desa, di-cache 1 jam
+        $demografi = Cache::remember('demografi_desa_live_v1', 3600, function () {
+            try {
+                $totalRaw = Http::withoutVerifying()
+                    ->connectTimeout(3)
+                    ->timeout(5)
+                    ->get('https://selotinatah.magetan.go.id/data-chart/total-penduduk')
+                    ->body();
+
+                $jenisKelaminRaw = Http::withoutVerifying()
+                    ->connectTimeout(3)
+                    ->timeout(5)
+                    ->get('https://selotinatah.magetan.go.id/data-chart/jenis-kelamin')
+                    ->json();
+
+                $agamaRaw = Http::withoutVerifying()
+                    ->connectTimeout(3)
+                    ->timeout(5)
+                    ->get('https://selotinatah.magetan.go.id/data-chart/agama')
+                    ->json();
+
+                $lakiLaki = 0;
+                $perempuan = 0;
+                if (isset($jenisKelaminRaw['DATA'])) {
+                    foreach ($jenisKelaminRaw['DATA'] as $item) {
+                        if (strtoupper($item['name']) === 'LAKI-LAKI') {
+                            $lakiLaki = $item['y'];
+                        }
+                        if (strtoupper($item['name']) === 'PEREMPUAN') {
+                            $perempuan = $item['y'];
+                        }
+                    }
+                }
+
+                return [
+                    'total_penduduk' => (int) trim($totalRaw),
+                    'laki_laki' => $lakiLaki,
+                    'perempuan' => $perempuan,
+                    'agama' => $agamaRaw['DATA'] ?? [],
+                    'source' => 'live',
+                ];
+            } catch (\Throwable $e) {
+                return null; // Fallback ke null jika website desa tidak merespon
+            }
+        });
+
+        return view('informasi-desa', compact('profil', 'demografi'));
     }
 }

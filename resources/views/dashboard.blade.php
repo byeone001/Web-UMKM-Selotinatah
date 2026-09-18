@@ -9,7 +9,7 @@
         <div class="page-header">
             <div>
                 <h1 class="page-title">Dashboard Rekap</h1>
-                <p class="page-subtitle">Ringkasan data UMKM & Produk Anyaman Bambu Desa Selotinatah</p>
+                <p class="page-subtitle">Ringkasan UMKM & Produk UMKM Desa Selotinatah</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('admin.laporan.excel') }}"
@@ -72,7 +72,7 @@
                         <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Total Produk</p>
                         <p class="text-4xl font-black text-slate-800">{{ $totalProduk }}</p>
                         <div class="flex items-center gap-1.5 mt-2">
-                            <span class="badge-blue text-[10px]">Anyaman Bambu</span>
+                            <span class="badge-blue text-[10px]">Produk UMKM</span>
                             <a href="{{ route('admin.produk.index') }}" class="text-xs text-blue-600 hover:underline font-semibold">Lihat semua →</a>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
                         </div>
                         <div>
                             <h3 class="text-sm font-black text-slate-800">Produk Terbaru</h3>
-                            <p class="text-xs text-slate-400">Anyaman bambu terkini</p>
+                            <p class="text-xs text-slate-400">Produk UMKM terkini</p>
                         </div>
                     </div>
                     <a href="{{ route('admin.produk.index') }}" class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">Lihat Semua →</a>

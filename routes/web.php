@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\UmkmController;
+use App\Http\Controllers\Admin\ProfilDesaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/laporan/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
             Route::resource('umkm', UmkmController::class);
             Route::resource('produk', ProdukController::class);
+            Route::get('profil-desa', [ProfilDesaController::class, 'edit'])->name('profil-desa.edit');
+            Route::put('profil-desa', [ProfilDesaController::class, 'update'])->name('profil-desa.update');
         });
     });
 });
