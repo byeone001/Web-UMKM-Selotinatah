@@ -23,26 +23,63 @@
           $firstGalleryImage = $galleryImages->first();
       @endphp
       <div class="col-lg-6">
-        <div class="rounded-4 overflow-hidden bg-custom-muted shadow-sm position-relative mb-3" style="height: 380px;">
-          @if($firstGalleryImage)
-            <img id="mainImage" src="{{ Storage::disk('supabase')->url($firstGalleryImage) }}" alt="{{ $produk->nama_produk }}" class="w-100 h-100 object-fit-cover" onerror="this.src='https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=800&h=600&fit=crop&auto=format'">
+        <div id="productGalleryCarousel" class="carousel slide rounded-4 overflow-hidden shadow-sm position-relative mb-3 bg-custom-muted" data-bs-ride="carousel" data-bs-interval="3000" style="height: 380px;">
+          @if($galleryImages->count() > 0)
+            <div class="carousel-inner h-100">
+              @foreach($galleryImages as $index => $galleryMedia)
+                @php 
+                    $isMediaVideo = Str::endsWith(strtolower($galleryMedia), ['.mp4', '.webm', '.mov']);
+                    $mediaUrl = Storage::disk('supabase')->url($galleryMedia);
+                @endphp
+                <div class="carousel-item h-100 {{ $index === 0 ? 'active' : '' }}">
+                  @if($isMediaVideo)
+                    <video src="{{ $mediaUrl }}" class="d-block w-100 h-100 object-fit-cover" muted loop playsinline></video>
+                  @else
+                    <img src="{{ $mediaUrl }}" class="d-block w-100 h-100 object-fit-cover" alt="{{ $produk->nama_produk }}" onerror="this.src='https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=800&h=600&fit=crop&auto=format'">
+                  @endif
+                </div>
+              @endforeach
+            </div>
+            
+            @if($galleryImages->count() > 1)
+              <button class="carousel-control-prev" type="button" data-bs-target="#productGalleryCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#productGalleryCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            @endif
           @else
             <img src="https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=800&h=600&fit=crop&auto=format" alt="{{ $produk->nama_produk }}" class="w-100 h-100 object-fit-cover">
           @endif
-          <div class="position-absolute top-0 start-0 m-3">
+          
+          <div class="position-absolute top-0 start-0 m-3" style="z-index: 10;">
               <x-badge-kategori :kategori="$produk->umkm->kategori ?? 'Kerajinan'" />
           </div>
         </div>
         
         @if($galleryImages->count() > 1)
-          <div class="d-flex gap-2 overflow-auto pb-2">
-            @foreach($galleryImages as $index => $galleryImage)
+          <div class="d-flex gap-2 overflow-auto pb-2" id="galleryThumbnails">
+            @foreach($galleryImages as $index => $galleryMedia)
+                @php 
+                    $isMediaVideo = Str::endsWith(strtolower($galleryMedia), ['.mp4', '.webm', '.mov']);
+                    $mediaUrl = Storage::disk('supabase')->url($galleryMedia);
+                @endphp
               <div 
-                class="rounded-3 overflow-hidden border border-2 border-custom cursor-pointer gallery-thumbnail" 
+                class="rounded-3 overflow-hidden border border-2 border-custom cursor-pointer gallery-thumbnail position-relative {{ $index === 0 ? 'border-primary' : '' }}" 
                 style="width: 70px; height: 70px; flex-shrink: 0;"
-                onclick="document.getElementById('mainImage').src = '{{ Storage::disk('supabase')->url($galleryImage) }}'; document.querySelectorAll('.gallery-thumbnail').forEach(el => el.classList.remove('border-primary')); this.classList.add('border-primary');"
+                data-bs-target="#productGalleryCarousel" data-bs-slide-to="{{ $index }}"
               >
-                <img src="{{ Storage::disk('supabase')->url($galleryImage) }}" alt="{{ $produk->nama_produk }} - foto {{ $index + 1 }}" class="w-100 h-100 object-fit-cover">
+                @if($isMediaVideo)
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50">
+                        <i class="bi bi-play-circle-fill text-white fs-4"></i>
+                    </div>
+                    <video src="{{ $mediaUrl }}#t=0.1" class="w-100 h-100 object-fit-cover" muted></video>
+                @else
+                    <img src="{{ $mediaUrl }}" alt="Thumbnail {{ $index + 1 }}" class="w-100 h-100 object-fit-cover">
+                @endif
               </div>
             @endforeach
           </div>
@@ -126,3 +163,42 @@
       .border-primary { border-color: var(--color-primary) !important; }
   </style>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carouselElement = document.getElementById('productGalleryCarousel');
+    if (!carouselElement) return;
+    
+    const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+    
+    // Play video in the first active slide if any
+    const firstActiveSlide = carouselElement.querySelector('.carousel-item.active');
+    if (firstActiveSlide) {
+        const firstVideo = firstActiveSlide.querySelector('video');
+        if (firstVideo) firstVideo.play();
+    }
+    
+    carouselElement.addEventListener('slid.bs.carousel', function (event) {
+        // Update thumbnail borders
+        thumbnails.forEach((thumb, idx) => {
+            if (idx === event.to) {
+                thumb.classList.add('border-primary');
+            } else {
+                thumb.classList.remove('border-primary');
+            }
+        });
+        
+        // Pause all videos
+        const allVideos = carouselElement.querySelectorAll('video');
+        allVideos.forEach(v => v.pause());
+        
+        // Play video in active slide
+        const activeVideo = event.relatedTarget.querySelector('video');
+        if (activeVideo) {
+            activeVideo.play();
+        }
+    });
+});
+</script>
+@endpush

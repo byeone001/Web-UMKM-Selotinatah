@@ -53,7 +53,7 @@ class ProdukController extends Controller
             'deskripsi' => 'nullable|string',
             'foto' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
             'fotos' => 'nullable|array|max:6',
-            'fotos.*' => 'image|mimes:png,jpg,jpeg,webp|max:5120',
+            'fotos.*' => 'file|mimes:png,jpg,jpeg,webp,mp4,webm|max:51200',
         ], [
             'id_umkm.required' => 'Silakan pilih UMKM pemilik produk.',
             'id_umkm.exists' => 'UMKM yang dipilih tidak valid.',
@@ -63,6 +63,8 @@ class ProdukController extends Controller
             'foto.image' => 'File harus berupa gambar.',
             'foto.mimes' => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
             'foto.max' => 'Ukuran foto maksimal 5 MB.',
+            'fotos.*.mimes' => 'Format galeri harus PNG, JPG, JPEG, WEBP, MP4, atau WEBM.',
+            'fotos.*.max' => 'Ukuran file galeri maksimal 50 MB.',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -117,7 +119,7 @@ class ProdukController extends Controller
             'deskripsi' => 'nullable|string',
             'foto' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
             'fotos' => 'nullable|array|max:6',
-            'fotos.*' => 'image|mimes:png,jpg,jpeg,webp|max:5120',
+            'fotos.*' => 'file|mimes:png,jpg,jpeg,webp,mp4,webm|max:51200',
         ], [
             'id_umkm.required' => 'Silakan pilih UMKM pemilik produk.',
             'id_umkm.exists' => 'UMKM yang dipilih tidak valid.',
@@ -127,6 +129,8 @@ class ProdukController extends Controller
             'foto.image' => 'File harus berupa gambar.',
             'foto.mimes' => 'Format foto harus PNG, JPG, JPEG, atau WEBP.',
             'foto.max' => 'Ukuran foto maksimal 5 MB.',
+            'fotos.*.mimes' => 'Format galeri harus PNG, JPG, JPEG, WEBP, MP4, atau WEBM.',
+            'fotos.*.max' => 'Ukuran file galeri maksimal 50 MB.',
         ]);
 
         if ($request->hasFile('foto')) {

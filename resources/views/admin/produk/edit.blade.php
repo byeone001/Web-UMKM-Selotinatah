@@ -123,8 +123,8 @@
                                ">
 
                         <label class="mt-4 block text-left text-xs font-bold text-slate-600" @click.stop>
-                            Tambah foto gallery (maks. 6)
-                            <input type="file" name="fotos[]" multiple accept="image/png,image/jpeg,image/webp"
+                            Tambah foto/video gallery (maks. 6, video maks 50 MB)
+                            <input type="file" name="fotos[]" multiple accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"
                                 class="form-input mt-2 text-xs">
                         </label>
 
