@@ -77,7 +77,7 @@
             </h2>
             <div class="text-custom-secondary lh-lg d-flex flex-column gap-3">
               @if($profil->sejarah)
-                <p class="mb-0">{{ $profil->sejarah }}</p>
+                <div class="mb-0">{!! $profil->sejarah !!}</div>
               @else
                 <p class="mb-0">
                   Desa Selotinatah terletak di kawasan sejuk kaki Gunung Lawu, Kecamatan Ngariboyo, Kabupaten Magetan. Udara yang segar dan kekayaan alam lokal menjadi modal utama tumbuh dan berkembangnya kreativitas ekonomi masyarakat desa.
@@ -96,7 +96,7 @@
             </h2>
             <div class="text-custom-secondary lh-lg mb-0">
               @if($profil->geografis)
-                <p>{{ $profil->geografis }}</p>
+                <div>{!! $profil->geografis !!}</div>
               @else
                 <p>Desa Selotinatah memiliki berbagai potensi alam dan sumber daya manusia yang mendukung perkembangan UMKM lokal. Potensi pertanian, peternakan, dan kerajinan menjadi kekuatan utama perekonomian desa. Wujud kemandirian ekonomi masyarakat Desa Selotinatah melalui ragam produk kuliner alami, kerajinan tangan, dan hasil usaha warga berkualitas.</p>
               @endif
@@ -109,11 +109,11 @@
             <div class="row g-4">
                 <div class="col-md-6">
                     <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">Visi</h2>
-                    <div class="text-custom-secondary lh-lg">{{ $profil->visi }}</div>
+                    <div class="text-custom-secondary lh-lg">{!! $profil->visi !!}</div>
                 </div>
                 <div class="col-md-6">
                     <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">Misi</h2>
-                    <div class="text-custom-secondary lh-lg">{{ $profil->misi }}</div>
+                    <div class="text-custom-secondary lh-lg">{!! $profil->misi !!}</div>
                 </div>
             </div>
           </section>
