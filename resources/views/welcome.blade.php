@@ -3,10 +3,55 @@
 @section('title', 'Beranda')
 
 @section('content')
-  <!-- Hero Section -->
-  <section class="hero-section text-white position-relative" style="background-image: url('https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=1600&h=900&fit=crop&auto=format');">
-    <div class="hero-overlay"></div>
-    <div class="container-xl px-3 px-sm-4 py-5 position-relative z-1 my-4">
+  {{-- Hero Section: Media Carousel --}}
+  @php
+    $heroFallback = 'https://images.unsplash.com/photo-1559628233-eb1b1a45564b?w=1600&h=900&fit=crop&auto=format';
+    $hasHeroMedia = isset($desaMedias) && $desaMedias->count() > 0;
+  @endphp
+  <section class="position-relative text-white overflow-hidden" style="min-height: 480px;">
+
+    {{-- Media Carousel Background --}}
+    @if($hasHeroMedia)
+      <div id="heroCarousel" class="carousel slide position-absolute top-0 start-0 w-100 h-100" data-bs-ride="carousel" data-bs-interval="6000" style="z-index: 0;">
+        <div class="carousel-inner h-100">
+          @foreach($desaMedias as $index => $media)
+            @php $mediaUrl = Storage::disk('supabase')->url($media->path); @endphp
+            <div class="carousel-item h-100 {{ $index === 0 ? 'active' : '' }}" style="min-height: 480px;">
+              @if($media->type === 'video')
+                <video src="{{ $mediaUrl }}" class="d-block w-100 h-100 object-fit-cover" muted loop playsinline style="min-height: 480px;"></video>
+              @else
+                <img src="{{ $mediaUrl }}" alt="{{ $media->judul ?? 'Desa Selotinatah' }}" class="d-block w-100 h-100 object-fit-cover" style="min-height: 480px;" onerror="this.src='{{ $heroFallback }}'"> 
+              @endif
+            </div>
+          @endforeach
+        </div>
+
+        @if($desaMedias->count() > 1)
+          <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" style="z-index: 3; width: 48px;">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" style="z-index: 3; width: 48px;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+          <div class="carousel-indicators" style="z-index: 3; margin-bottom: 1rem;">
+            @foreach($desaMedias as $index => $media)
+              <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index }}"
+                class="{{ $index === 0 ? 'active' : '' }}" aria-label="Slide {{ $index + 1 }}"></button>
+            @endforeach
+          </div>
+        @endif
+      </div>
+    @else
+      <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 0; background-image: url('{{ $heroFallback }}'); background-size: cover; background-position: center;"></div>
+    @endif
+
+    {{-- Overlay gelap --}}
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 100%); z-index: 1;"></div>
+
+    {{-- Konten Hero (di atas carousel & overlay) --}}
+    <div class="container-xl px-3 px-sm-4 py-5 position-relative my-4" style="z-index: 2;">
       <div class="row">
         <div class="col-lg-7 col-md-9">
           <div class="d-inline-block px-3 py-1 rounded-pill bg-white bg-opacity-20 text-white small fw-medium mb-3" style="font-size: 0.8rem;">
@@ -262,3 +307,18 @@
     </div>
   </section>
 @endsection
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var heroCarousel = document.getElementById('heroCarousel');
+    if (!heroCarousel) return;
+    var firstActive = heroCarousel.querySelector('.carousel-item.active');
+    if (firstActive) { var v = firstActive.querySelector('video'); if (v) v.play(); }
+    heroCarousel.addEventListener('slid.bs.carousel', function(event) {
+        heroCarousel.querySelectorAll('video').forEach(function(v){ v.pause(); });
+        var av = event.relatedTarget.querySelector('video');
+        if (av) av.play();
+    });
+});
+</script>
+@endpush

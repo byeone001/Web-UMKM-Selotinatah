@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Models\ProfilDesa;
 use App\Models\Umkm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -135,23 +136,26 @@ class PublicController extends Controller
                 'icon' => '🐓',
                 'bgClass' => 'bg-amber-light',
                 'borderClass' => 'border-amber-subtle',
-                'desc' => 'Potensi peternakan dan hasil olahan ternak berkualitas dari warga desa.'
+                'desc' => 'Potensi peternakan dan hasil olahan ternak berkualitas dari warga desa.',
             ],
             [
                 'label' => 'Kerajinan',
                 'icon' => '🧺',
                 'bgClass' => 'bg-orange-light',
                 'borderClass' => 'border-orange-subtle',
-                'desc' => 'Kerajinan tangan dan anyaman bambu yang unik dan bernilai seni tinggi.'
+                'desc' => 'Kerajinan tangan dan anyaman bambu yang unik dan bernilai seni tinggi.',
             ],
             [
                 'label' => 'Kuliner',
                 'icon' => '🍲',
                 'bgClass' => 'bg-green-light',
                 'borderClass' => 'border-green-subtle',
-                'desc' => 'Jajanan, camilan, dan makanan khas lokal dengan cita rasa autentik.'
-            ]
+                'desc' => 'Jajanan, camilan, dan makanan khas lokal dengan cita rasa autentik.',
+            ],
         ];
+
+        // Media carousel desa untuk hero section
+        $desaMedias = ProfilDesa::first()?->medias()->orderBy('urutan')->get() ?? collect();
 
         // Kirimkan $kategoriList ke view
         return view('welcome', compact(
@@ -162,7 +166,8 @@ class PublicController extends Controller
             'kategoriInfo',
             'produk',
             'umkm',
-            'berita'
+            'berita',
+            'desaMedias'
         ));
 
     }
@@ -227,8 +232,8 @@ class PublicController extends Controller
         $query = Umkm::query();
 
         if ($request->filled('search')) {
-            $query->where('nama_umkm', 'like', '%' . $request->search . '%')
-                  ->orWhere('pemilik', 'like', '%' . $request->search . '%');
+            $query->where('nama_umkm', 'like', '%'.$request->search.'%')
+                ->orWhere('pemilik', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('kategori') && $request->kategori !== 'Semua') {
@@ -236,7 +241,7 @@ class PublicController extends Controller
         }
 
         $umkmList = $query->latest()->paginate(12);
-        
+
         $kategoriList = Umkm::whereNotNull('kategori')
             ->where('kategori', '!=', '')
             ->distinct()
@@ -249,7 +254,8 @@ class PublicController extends Controller
     // Halaman Informasi Desa
     public function informasiDesa()
     {
-        $profil = \App\Models\ProfilDesa::first() ?? new \App\Models\ProfilDesa();
+        $profil = ProfilDesa::first() ?? new ProfilDesa;
+        $desaMedias = $profil->exists ? $profil->medias()->orderBy('urutan')->get() : collect();
 
         // Ambil data demografi real-time dari website resmi desa, di-cache 1 jam
         $demografi = Cache::remember('demografi_desa_live_v1', 3600, function () {
@@ -297,6 +303,6 @@ class PublicController extends Controller
             }
         });
 
-        return view('informasi-desa', compact('profil', 'demografi'));
+        return view('informasi-desa', compact('profil', 'demografi', 'desaMedias'));
     }
 }

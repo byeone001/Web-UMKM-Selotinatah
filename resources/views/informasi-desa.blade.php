@@ -17,11 +17,50 @@
       </p>
     </div>
 
-    <!-- Hero Image Banner -->
-    <div class="position-relative rounded-4 overflow-hidden mb-5 bg-custom-muted shadow-sm" style="height: 300px;">
-      <img src="https://images.unsplash.com/photo-1588084188698-e626698fd8cb?w=1200&h=500&fit=crop&auto=format" alt="Desa Selotinatah" class="w-100 h-100 object-fit-cover">
-      <div class="position-absolute inset-0 w-100 h-100 top-0 start-0" style="background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%);"></div>
-      <div class="position-absolute bottom-0 start-0 p-4 text-white">
+    {{-- Hero Media Carousel (Foto / Video) --}}
+    @php
+        $hasBannerMedia = $desaMedias->count() > 0;
+        $fallbackImg = 'https://images.unsplash.com/photo-1588084188698-e626698fd8cb?w=1200&h=500&fit=crop&auto=format';
+    @endphp
+    <div class="position-relative rounded-4 overflow-hidden mb-5 bg-custom-muted shadow-sm" style="height: 320px;">
+      @if($hasBannerMedia)
+        <div id="desaBannerCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5000">
+          <div class="carousel-inner h-100">
+            @foreach($desaMedias as $index => $media)
+              @php $mediaUrl = Storage::disk('supabase')->url($media->path); @endphp
+              <div class="carousel-item h-100 {{ $index === 0 ? 'active' : '' }}">
+                @if($media->type === 'video')
+                  <video src="{{ $mediaUrl }}" class="d-block w-100 h-100 object-fit-cover" muted loop playsinline></video>
+                @else
+                  <img src="{{ $mediaUrl }}" alt="{{ $media->judul ?? ($profil->nama_desa ?? 'Desa Selotinatah') }}" class="d-block w-100 h-100 object-fit-cover" onerror="this.src='{{ $fallbackImg }}'">
+                @endif
+              </div>
+            @endforeach
+          </div>
+
+          @if($desaMedias->count() > 1)
+            <button class="carousel-control-prev" type="button" data-bs-target="#desaBannerCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#desaBannerCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+            <div class="carousel-indicators">
+              @foreach($desaMedias as $index => $media)
+                <button type="button" data-bs-target="#desaBannerCarousel" data-bs-slide-to="{{ $index }}"
+                  class="{{ $index === 0 ? 'active' : '' }}" aria-label="Slide {{ $index + 1 }}"></button>
+              @endforeach
+            </div>
+          @endif
+        </div>
+      @else
+        <img src="{{ $fallbackImg }}" alt="Desa Selotinatah" class="w-100 h-100 object-fit-cover">
+      @endif
+
+      <div class="position-absolute inset-0 w-100 h-100 top-0 start-0" style="background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%); pointer-events: none; z-index: 2;"></div>
+      <div class="position-absolute bottom-0 start-0 p-4 text-white" style="z-index: 5;">
         <div class="font-serif fw-semibold fs-4">{{ $profil->nama_desa ?? 'Desa Selotinatah' }}</div>
         <div class="text-white text-opacity-80 small">Kecamatan Ngariboyo, Kabupaten Magetan</div>
       </div>
@@ -242,3 +281,19 @@
   </div>
 @endsection
 
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var carouselEl = document.getElementById('desaBannerCarousel');
+    if (!carouselEl) return;
+    var firstActive = carouselEl.querySelector('.carousel-item.active');
+    if (firstActive) { var v = firstActive.querySelector('video'); if (v) v.play(); }
+    carouselEl.addEventListener('slid.bs.carousel', function(event) {
+        carouselEl.querySelectorAll('video').forEach(function(v){ v.pause(); });
+        var av = event.relatedTarget.querySelector('video');
+        if (av) av.play();
+    });
+});
+</script>
+@endpush
