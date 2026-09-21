@@ -21,6 +21,22 @@ Route::get('/sitemap.xml', function () {
         url('/daftar-umkm'),
     ];
 
+    // Tambahkan semua halaman detail UMKM
+    $umkmIds = \App\Models\Umkm::query()
+        ->pluck('id_umkm');
+
+    foreach ($umkmIds as $id) {
+        $urls[] = url('/umkm/' . $id);
+    }
+
+    // Tambahkan semua halaman detail produk
+    $produkIds = \App\Models\Produk::query()
+        ->pluck('id_produk');
+
+    foreach ($produkIds as $id) {
+        $urls[] = url('/produk/' . $id);
+    }
+
     $xml = '<?xml version="1.0" encoding="UTF-8"?>';
     $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
