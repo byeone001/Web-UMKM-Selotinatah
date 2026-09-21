@@ -88,85 +88,6 @@
               @endif
             </div>
           </section>
-
-          <!-- Potensi / Geografis Desa -->
-          <section>
-            <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">
-              Kondisi Geografis & Potensi
-            </h2>
-            <div class="text-custom-secondary lh-lg mb-0">
-              @if($profil->geografis)
-                <div>{!! $profil->geografis !!}</div>
-              @else
-                <p>Desa Selotinatah memiliki berbagai potensi alam dan sumber daya manusia yang mendukung perkembangan UMKM lokal. Potensi pertanian, peternakan, dan kerajinan menjadi kekuatan utama perekonomian desa. Wujud kemandirian ekonomi masyarakat Desa Selotinatah melalui ragam produk kuliner alami, kerajinan tangan, dan hasil usaha warga berkualitas.</p>
-              @endif
-            </div>
-          </section>
-
-          <!-- Visi & Misi -->
-          @if($profil->visi || $profil->misi)
-          <section>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">Visi</h2>
-                    <div class="text-custom-secondary lh-lg">{!! $profil->visi !!}</div>
-                </div>
-                <div class="col-md-6">
-                    <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">Misi</h2>
-                    <div class="text-custom-secondary lh-lg">{!! $profil->misi !!}</div>
-                </div>
-            </div>
-          </section>
-          @endif
-
-          <!-- Potensi UMKM -->
-          <section>
-            <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">
-              Potensi UMKM
-            </h2>
-            <p class="text-custom-secondary lh-lg mb-4">
-              UMKM di Desa Selotinatah mencakup tiga sektor utama yang terus berkembang dan berkontribusi pada perekonomian desa:
-            </p>
-            <div class="row g-3">
-              <div class="col-sm-4">
-                <div class="rounded-3 bg-custom-secondary p-3 border border-custom h-100">
-                  <div class="fs-2 mb-2">🐓</div>
-                  <div class="fw-semibold small text-custom-foreground mb-1">Peternakan</div>
-                  <div class="text-custom-muted" style="font-size: 0.78rem; line-height: 1.4;">Peternakan dan produk olahan hasil ternak warga.</div>
-                </div>
-              </div>
-              <div class="col-sm-4">
-                <div class="rounded-3 bg-custom-secondary p-3 border border-custom h-100">
-                  <div class="fs-2 mb-2">🧺</div>
-                  <div class="fw-semibold small text-custom-foreground mb-1">Kerajinan</div>
-                  <div class="text-custom-muted" style="font-size: 0.78rem; line-height: 1.4;">Anyaman bambu dan kerajinan tangan lokal.</div>
-                </div>
-              </div>
-              <div class="col-sm-4">
-                <div class="rounded-3 bg-custom-secondary p-3 border border-custom h-100">
-                  <div class="fs-2 mb-2">🍲</div>
-                  <div class="fw-semibold small text-custom-foreground mb-1">Kuliner</div>
-                  <div class="text-custom-muted" style="font-size: 0.78rem; line-height: 1.4;">Aneka jajanan dan makanan khas asli Desa Selotinatah.</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Info Pendukung -->
-          <section>
-            <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">
-              Kabar & Informasi
-            </h2>
-            <div class="rounded-3 bg-amber-light border border-amber-subtle p-4 small">
-              <p class="fw-bold mb-1">Website Resmi Desa</p>
-              <p class="mb-2 lh-base">
-                Untuk mendapatkan informasi lebih lengkap terkait kependudukan, program desa, serta berita resmi pemerintah desa, silakan kunjungi website resmi Desa Selotinatah.
-              </p>
-              <a href="https://selotinatah.magetan.go.id/" target="_blank" class="btn btn-sm btn-outline-dark mt-2">
-                Buka Website Desa <i class="bi bi-box-arrow-up-right"></i>
-              </a>
-            </div>
-          </section>
         </div>
       </div>
 
@@ -278,7 +199,97 @@
         </div>
       </div>
     </div>
-  </div>
+
+    <!--
+    <div class="mt-5 d-flex flex-column gap-5">
+       # Potensi / Geografis Desa
+          <section>
+            <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">
+              Kondisi Geografis & Potensi
+            </h2>
+            <div class="text-custom-secondary lh-lg mb-0">
+              @if($profil->geografis)
+                <div>{!! $profil->geografis !!}</div>
+              @else
+                <p>Desa Selotinatah memiliki berbagai potensi alam dan sumber daya manusia yang mendukung perkembangan UMKM lokal. Potensi pertanian, peternakan, dan kerajinan menjadi kekuatan utama perekonomian desa. Wujud kemandirian ekonomi masyarakat Desa Selotinatah melalui ragam produk kuliner alami, kerajinan tangan, dan hasil usaha warga berkualitas.</p>
+              @endif
+            </div>
+          </section>  
+          -->
+
+          <!-- Visi & Misi Full Width -->
+          @if($profil->visi || $profil->misi)
+          <div class="mt-5 pt-4 border-top border-custom d-flex flex-column gap-4">
+              @if($profil->visi)
+              <section>
+                  <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">Visi</h2>
+                  <div class="text-custom-secondary lh-lg">{!! $profil->visi !!}</div>
+              </section>
+              @endif
+              @if($profil->misi)
+              <section>
+                  <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">Misi</h2>
+                  <div class="text-custom-secondary lh-lg">{!! $profil->misi !!}</div>
+              </section>
+              @endif
+          </div>
+          @endif
+
+          <!-- Potensi UMKM -->
+
+        <div class="mt-5 pt-4 border-top border-custom d-flex flex-column gap-4">
+          <section>
+            <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">
+              Potensi UMKM
+            </h2>
+            <p class="text-custom-secondary lh-lg mb-4">
+              UMKM di Desa Selotinatah mencakup tiga sektor utama yang terus berkembang dan berkontribusi pada perekonomian desa:
+            </p>
+            <div class="row g-3">
+              <div class="col-sm-4">
+                <div class="rounded-3 bg-custom-secondary p-3 border border-custom h-100">
+                  <div class="fs-2 mb-2">🐓</div>
+                  <div class="fw-semibold small text-custom-foreground mb-1">Peternakan</div>
+                  <div class="text-custom-muted" style="font-size: 0.78rem; line-height: 1.4;">Peternakan dan produk olahan hasil ternak warga.</div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="rounded-3 bg-custom-secondary p-3 border border-custom h-100">
+                  <div class="fs-2 mb-2">🧺</div>
+                  <div class="fw-semibold small text-custom-foreground mb-1">Kerajinan</div>
+                  <div class="text-custom-muted" style="font-size: 0.78rem; line-height: 1.4;">Anyaman bambu dan kerajinan tangan lokal.</div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="rounded-3 bg-custom-secondary p-3 border border-custom h-100">
+                  <div class="fs-2 mb-2">🍲</div>
+                  <div class="fw-semibold small text-custom-foreground mb-1">Kuliner</div>
+                  <div class="text-custom-muted" style="font-size: 0.78rem; line-height: 1.4;">Aneka jajanan dan makanan khas asli Desa Selotinatah.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+          <!-- Info Pendukung -->
+        <div class="mt-5 pt-4 border-top border-custom d-flex flex-column gap-4">
+          <section>
+            <h2 class="font-serif fw-semibold text-custom-foreground fs-4 mb-3">
+              Kabar & Informasi
+            </h2>
+            <div class="rounded-3 bg-amber-light border border-amber-subtle p-4 small">
+              <p class="fw-bold mb-1">Website Resmi Desa</p>
+              <p class="mb-2 lh-base">
+                Untuk mendapatkan informasi lebih lengkap terkait kependudukan, program desa, serta berita resmi pemerintah desa, silakan kunjungi website resmi Desa Selotinatah.
+              </p>
+              <a href="https://selotinatah.magetan.go.id/" target="_blank" class="btn btn-sm btn-outline-dark mt-2">
+                Buka Website Desa <i class="bi bi-box-arrow-up-right"></i>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+
 @endsection
 
 
