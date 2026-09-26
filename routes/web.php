@@ -79,6 +79,10 @@ Route::middleware('auth')->group(function () {
             Route::get('profil-desa', [ProfilDesaController::class, 'edit'])->name('profil-desa.edit');
             Route::put('profil-desa', [ProfilDesaController::class, 'update'])->name('profil-desa.update');
             Route::post('profil-desa/media', [ProfilDesaController::class, 'storeMedia'])->name('profil-desa.media.store');
+            Route::post('profil-desa/media/upload-url', [ProfilDesaController::class, 'createMediaUpload'])
+                ->name('profil-desa.media.upload-url');
+            Route::post('profil-desa/media/complete', [ProfilDesaController::class, 'completeMediaUpload'])
+                ->name('profil-desa.media.complete');
             Route::delete('profil-desa/media/{desaMedia}', [ProfilDesaController::class, 'destroyMedia'])->name('profil-desa.media.destroy');
         });
     });

@@ -171,7 +171,7 @@
                                 <p class="text-black text-xs font-medium truncate mb-1">{{ $media->judul }}</p>
                             @endif
                             <form action="{{ route('admin.profil-desa.media.destroy', $media->id) }}" method="POST"
-                                  onsubmit="return confirm('Hapus media ini?')">
+                                  class="delete-media-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
@@ -198,50 +198,127 @@
             @endif
 
             {{-- Form Upload Media Baru --}}
+            {{-- Form Upload Media Baru --}}
             <div class="border-t border-slate-100 pt-5">
                 <h3 class="text-sm font-bold text-slate-700 mb-4">Upload Media Baru</h3>
-                <form action="{{ route('admin.profil-desa.media.store') }}" method="POST" enctype="multipart/form-data" id="media-upload-form">
+
+                <form
+                    action="{{ route('admin.profil-desa.media.store') }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    id="media-upload-form"
+                >
                     @csrf
+
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+
                         <div class="sm:col-span-2">
                             <label class="form-label">File Foto / Video</label>
+
                             <div class="relative">
-                                <input 
-                                    type="file" 
-                                    name="file" 
+                                <input
+                                    type="file"
+                                    name="file"
                                     id="media-file-input"
                                     accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/quicktime"
                                     class="form-input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer"
                                     required
                                 >
                             </div>
-                            <p class="text-xs text-slate-400 mt-1">Foto: JPG, PNG, WebP, GIF • Video: MP4, WebM, MOV • Maks. 50 MB</p>
+
+                            <p class="text-xs text-slate-400 mt-1">
+                                Foto: JPG, PNG, WebP, GIF • Video: MP4, WebM, MOV • Maks. 50 MB
+                            </p>
                         </div>
+
                         <div>
                             <label class="form-label">Judul (Opsional)</label>
-                            <input type="text" name="judul" placeholder="Contoh: Balai Desa..." class="form-input">
+
+                            <input
+                                type="text"
+                                name="judul"
+                                id="media-title-input"
+                                placeholder="Contoh: Balai Desa..."
+                                class="form-input"
+                            >
                         </div>
+
                     </div>
 
                     {{-- Upload progress --}}
-                    <div id="upload-progress" class="hidden mt-3">
+                    <div id="upload-progress" class="hidden mt-4">
+
                         <div class="flex items-center gap-2 text-sm text-slate-600">
-                            <svg class="animate-spin w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+
+                            <svg
+                                class="animate-spin w-4 h-4 text-emerald-600"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    class="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                ></circle>
+
+                                <path
+                                    class="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                ></path>
                             </svg>
-                            <span>Mengunggah, mohon tunggu...</span>
+
+                            <span id="upload-status">
+                                Mengunggah, mohon tunggu...
+                            </span>
+
                         </div>
-                    </div> 
+
+                        {{-- Progress bar --}}
+                        <div class="w-full bg-slate-200 rounded-full h-2 mt-3 overflow-hidden">
+                            <div
+                                id="upload-progress-bar"
+                                class="bg-emerald-600 h-2 rounded-full transition-all duration-300"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+
+                        <p
+                            id="upload-percentage"
+                            class="text-xs text-slate-400 mt-1 text-right"
+                        >
+                            0%
+                        </p>
+
+                    </div>
 
                     <div class="flex justify-end gap-3 mt-6">
-                        <button type="submit" id="upload-btn"
-                            class="btn-primary py-2.5 px-8">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+
+                        <button
+                            type="submit"
+                            id="upload-btn"
+                            class="btn-primary py-2.5 px-8"
+                        >
+                            <svg
+                                class="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                />
                             </svg>
+
                             Upload Media
                         </button>
+
                     </div>
                 </form>
             </div>
@@ -254,11 +331,248 @@
 
     </div>
     
-    <script>
+    <!-- <script>
         document.getElementById('media-upload-form')?.addEventListener('submit', function() {
             document.getElementById('upload-progress').classList.remove('hidden');
             document.getElementById('upload-btn').disabled = true;
             document.getElementById('upload-btn').classList.add('opacity-60');
         });
-    </script>
+    </script> -->
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const form = document.getElementById('media-upload-form');
+        const fileInput = document.getElementById('media-file-input');
+        const titleInput = document.getElementById('media-title-input');
+        const uploadBtn = document.getElementById('upload-btn');
+
+        const progress = document.getElementById('upload-progress');
+        const progressBar = document.getElementById('upload-progress-bar');
+        const percentage = document.getElementById('upload-percentage');
+        const statusText = document.getElementById('upload-status');
+
+        if (!form || !fileInput) {
+            return;
+        }
+
+        form.addEventListener('submit', async function (event) {
+
+            event.preventDefault();
+
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Silakan pilih file terlebih dahulu.');
+                return;
+            }
+
+            const maxSize = 50 * 1024 * 1024;
+
+            if (file.size > maxSize) {
+                alert('Ukuran file maksimal 50 MB.');
+                return;
+            }
+
+            const extension = file.name
+                .split('.')
+                .pop()
+                .toLowerCase();
+
+            const videoExtensions = ['mp4', 'webm', 'mov'];
+
+            const type = videoExtensions.includes(extension)
+                ? 'video'
+                : 'foto';
+
+            uploadBtn.disabled = true;
+            uploadBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            progress.classList.remove('hidden');
+
+            progressBar.style.width = '0%';
+            percentage.textContent = '0%';
+            statusText.textContent = 'Menyiapkan upload...';
+
+            try {
+
+                // 1. Minta upload URL dari Laravel
+                const uploadUrlResponse = await fetch(
+                    "{{ route('admin.profil-desa.media.upload-url') }}",
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            filename: file.name,
+                            content_type: file.type
+                        })
+                    }
+                );
+
+                if (!uploadUrlResponse.ok) {
+                    const error = await uploadUrlResponse.json();
+
+                    throw new Error(
+                        error.message || 'Gagal mendapatkan URL upload.'
+                    );
+                }
+
+                const uploadData = await uploadUrlResponse.json();
+
+                // 2. Upload langsung ke Supabase
+                statusText.textContent = 'Mengunggah ke Supabase...';
+
+                await uploadFileWithProgress(
+                    uploadData.upload_url,
+                    file,
+                    uploadData.headers || {},
+                    function (percent) {
+                        progressBar.style.width = percent + '%';
+                        percentage.textContent = percent + '%';
+                    }
+                );
+
+                // 3. Simpan informasi media ke database
+                statusText.textContent = 'Menyimpan informasi media...';
+
+                const completeResponse = await fetch(
+                    "{{ route('admin.profil-desa.media.complete') }}",
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            path: uploadData.path,
+                            type: type,
+                            judul: titleInput.value
+                        })
+                    }
+                );
+
+                if (!completeResponse.ok) {
+                    const error = await completeResponse.json();
+
+                    throw new Error(
+                        error.message || 'Gagal menyimpan data media.'
+                    );
+                }
+
+                const result = await completeResponse.json();
+
+                progressBar.style.width = '100%';
+                percentage.textContent = '100%';
+                statusText.textContent = 'Upload berhasil!';
+
+                showToast(
+                    result.message || 'Media berhasil diunggah.',
+                    'success',
+                    function () {
+                        window.location.reload();
+                    }
+                );
+
+            } catch (error) {
+
+                console.error('Upload error:', error);
+
+                alert(
+                    'Upload gagal: ' +
+                    (error.message || 'Terjadi kesalahan.')
+                );
+
+                progress.classList.add('hidden');
+
+            } finally {
+
+                uploadBtn.disabled = false;
+
+                uploadBtn.classList.remove(
+                    'opacity-50',
+                    'cursor-not-allowed'
+                );
+            }
+        });
+
+
+        function uploadFileWithProgress(
+            url,
+            file,
+            headers,
+            onProgress
+        ) {
+            return new Promise(function (resolve, reject) {
+
+                const xhr = new XMLHttpRequest();
+
+                xhr.open('PUT', url, true);
+
+                Object.keys(headers).forEach(function (key) {
+                    xhr.setRequestHeader(
+                        key,
+                        headers[key]
+                    );
+                });
+
+                xhr.upload.addEventListener(
+                    'progress',
+                    function (event) {
+
+                        if (event.lengthComputable) {
+
+                            const percent = Math.round(
+                                (event.loaded / event.total) * 100
+                            );
+
+                            onProgress(percent);
+                        }
+                    }
+                );
+
+                xhr.onload = function () {
+
+                    if (
+                        xhr.status >= 200 &&
+                        xhr.status < 300
+                    ) {
+                        resolve();
+                    } else {
+                        reject(
+                            new Error(
+                                'Supabase menolak upload. HTTP ' +
+                                xhr.status
+                            )
+                        );
+                    }
+                };
+
+                xhr.onerror = function () {
+                    reject(
+                        new Error(
+                            'Koneksi ke Supabase gagal.'
+                        )
+                    );
+                };
+
+                xhr.onabort = function () {
+                    reject(
+                        new Error(
+                            'Upload dibatalkan.'
+                        )
+                    );
+                };
+
+                xhr.send(file);
+            });
+        }
+
+    });
+</script>
+
 </x-app-layout>

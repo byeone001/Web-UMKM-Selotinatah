@@ -31,6 +31,56 @@
 </head>
 
 <body class="font-sans antialiased bg-slate-50 text-slate-800" x-data="{ sidebarOpen: false, profileOpen: false }">
+    {{-- NOTIFIKASI BERHASIL --}}
+    @if(session('success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-cloak
+            class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm"
+            x-transition.opacity
+        >
+            <div
+                class="w-[90%] max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 text-center"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100"
+            >
+
+                {{-- Icon --}}
+                <div class="mx-auto mb-4 w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2.5"
+                            d="M5 13l4 4L19 7"
+                        />
+                    </svg>
+                </div>
+
+                {{-- Judul --}}
+                <h3 class="text-lg font-bold text-slate-800">
+                    Berhasil
+                </h3>
+
+                {{-- Pesan --}}
+                <p class="text-sm text-slate-500 mt-2">
+                    {{ session('success') }}
+                </p>
+
+                {{-- Tombol --}}
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="mt-6 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors"
+                >
+                    Oke
+                </button>
+
+            </div>
+        </div>
+    @endif
 
     <!-- =============================================
          MOBILE SIDEBAR OVERLAY
@@ -326,6 +376,284 @@
     </div>
 
     @stack('scripts')
+
+    <script>
+    function showToast(message, type = 'success', onClose = null) {
+
+        const config = {
+            success: {
+                title: 'Berhasil',
+                icon: `
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M5 13l4 4L19 7"/>
+                    </svg>
+                `,
+                color: 'emerald'
+            },
+
+            error: {
+                title: 'Gagal',
+                icon: `
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                `,
+                color: 'red'
+            },
+
+            warning: {
+                title: 'Peringatan',
+                icon: `
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M12 9v3m0 4h.01M10.29 3.86l-7.82 13a2 2 0 001.71 3h15.64a2 2 0 001.71-3l-7.82-13a2 2 0 00-3.42 0z"/>
+                    </svg>
+                `,
+                color: 'amber'
+            }
+        };
+
+        const selected = config[type] || config.success;
+
+        const overlay = document.createElement('div');
+
+        overlay.className = `
+            fixed inset-0 z-[9999]
+            flex items-center justify-center
+            bg-slate-900/40 backdrop-blur-sm
+            opacity-0
+            transition-opacity duration-300
+        `;
+
+        overlay.innerHTML = `
+            <div class="
+                w-[90%] max-w-md
+                bg-white
+                rounded-2xl
+                shadow-2xl
+                border border-slate-200
+                p-6
+                text-center
+                scale-95
+                transition-transform duration-300
+            ">
+
+                <div class="
+                    mx-auto mb-4
+                    w-16 h-16
+                    rounded-full
+                    bg-${selected.color}-100
+                    text-${selected.color}-600
+                    flex items-center justify-center
+                ">
+                    ${selected.icon}
+                </div>
+
+                <h3 class="text-lg font-bold text-slate-800">
+                    ${selected.title}
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    ${message}
+                </p>
+
+                <button
+                    type="button"
+                    class="
+                        mt-6
+                        min-w-[100px]
+                        px-6 py-2.5
+                        rounded-xl
+                        bg-emerald-600
+                        hover:bg-emerald-700
+                        text-white
+                        text-sm font-semibold
+                        shadow-sm
+                        transition-all
+                        hover:shadow-md
+                    "
+                    data-toast-ok
+                >
+                    Oke
+                </button>
+
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        const box = overlay.querySelector('div');
+        const okButton = overlay.querySelector('[data-toast-ok]');
+
+        // Animasi masuk
+        requestAnimationFrame(() => {
+            overlay.classList.remove('opacity-0');
+            box.classList.remove('scale-95');
+            box.classList.add('scale-100');
+        });
+
+        function closeToast() {
+
+            overlay.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+
+            setTimeout(() => {
+                overlay.remove();
+
+                if (typeof onClose === 'function') {
+                    onClose();
+                }
+            }, 300);
+        }
+
+        okButton.addEventListener('click', closeToast);
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        document.querySelectorAll('.delete-media-form').forEach(function (form) {
+
+            form.addEventListener('submit', function (event) {
+
+                event.preventDefault();
+
+                const modal = document.createElement('div');
+
+                modal.className = `
+                    fixed inset-0 z-[9999]
+                    flex items-center justify-center
+                    bg-slate-900/40 backdrop-blur-sm
+                    opacity-0
+                    transition-opacity duration-300
+                `;
+
+                modal.innerHTML = `
+                    <div class="
+                        w-[90%] max-w-md
+                        bg-white
+                        rounded-2xl
+                        shadow-2xl
+                        border border-slate-200
+                        p-6
+                        text-center
+                        scale-95
+                        transition-transform duration-300
+                    ">
+
+                        <div class="
+                            mx-auto mb-4
+                            w-16 h-16
+                            rounded-full
+                            bg-red-100
+                            text-red-600
+                            flex items-center justify-center
+                        ">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2.5"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-slate-800">
+                            Hapus Media?
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-2">
+                            Media ini akan dihapus secara permanen.
+                            Tindakan ini tidak dapat dibatalkan.
+                        </p>
+
+                        <div class="flex justify-center gap-3 mt-6">
+
+                            <button
+                                type="button"
+                                data-delete-cancel
+                                class="
+                                    px-5 py-2.5
+                                    rounded-xl
+                                    bg-slate-100
+                                    hover:bg-slate-200
+                                    text-slate-700
+                                    text-sm font-semibold
+                                    transition-colors
+                                "
+                            >
+                                Batal
+                            </button>
+
+                            <button
+                                type="button"
+                                data-delete-confirm
+                                class="
+                                    px-5 py-2.5
+                                    rounded-xl
+                                    bg-red-600
+                                    hover:bg-red-700
+                                    text-white
+                                    text-sm font-semibold
+                                    transition-colors
+                                "
+                            >
+                                Ya, Hapus
+                            </button>
+
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                const box = modal.querySelector('div');
+
+                // Animasi masuk
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0');
+                    box.classList.remove('scale-95');
+                    box.classList.add('scale-100');
+                });
+
+                const closeModal = function () {
+
+                    modal.classList.add('opacity-0');
+                    box.classList.remove('scale-100');
+                    box.classList.add('scale-95');
+
+                    setTimeout(() => {
+                        modal.remove();
+                    }, 300);
+                };
+
+                // Tombol Batal
+                modal.querySelector('[data-delete-cancel]')
+                    .addEventListener('click', closeModal);
+
+                // Tombol Ya, Hapus
+                modal.querySelector('[data-delete-confirm]')
+                    .addEventListener('click', function () {
+
+                        closeModal();
+
+                        // Submit form asli
+                        setTimeout(() => {
+                            form.submit();
+                        }, 300);
+                    });
+
+            });
+
+        });
+
+    });
+</script>
+
 </body>
 
 </html>
